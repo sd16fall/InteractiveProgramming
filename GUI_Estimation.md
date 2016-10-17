@@ -1,10 +1,10 @@
 Tasks & time to complete
-1) Start Screen - by clicking enter
-2) Tetris Board
-3) Tetris Shapes
-4) Drop & Stay 
-5) Line completes, highlight & disappears/collides
-6) Score count
-7) Rotation of tetris piece
-8) Line count
-
+1) Start Screen - by clicking enter (15 min)
+2) Tetris Board (15 min)
+3) Tetris Shapes (15 min)
+4) Drop & Stay (2 hours)
+5) Line completes, highlight & disappears/collides (3 hours)
+6) Score count (15 min)
+7) Rotation of tetris piece (1 hour)
+8) Line count (15 min)
+9) Other (6 hours)
