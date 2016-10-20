@@ -1,0 +1,9 @@
+import graphics to pygame
+create controls
+combine graphics with controls
+figure out how to get pieces of food to show up at random times and places. While always making sure there is a piece on the map
+figure out an optimal size for the screen to make it difficult enough but no too easy.
+need to create grid system for unicorn to follow. Can only be in certain directions/orientations.
+
+
+
