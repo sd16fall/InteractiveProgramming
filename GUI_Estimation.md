@@ -4,6 +4,7 @@ Tasks & time to complete
 
 2) Tetris Board (3 hours)
     a) make it so that it updates with each game state
+    
 3) Tetris Shapes (1 hour)
 
 4) Drop & Stay (2 hours)
@@ -38,7 +39,7 @@ We plan on implementing the following Tetris background theme music:
 
 https://www.youtube.com/watch?v=NmCCQxVBfyM
 
-#Loading and playing background music - code from inventwithpython
+Loading and playing background music - code from inventwithpython
 
 pygame.mixer.music.load(tetris_music.mp3')
 
