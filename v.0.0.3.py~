@@ -1,0 +1,29 @@
+import sys
+import pygame
+
+pygame.display.init()
+
+white = (255, 255, 255)
+black = (0, 0,0 )
+red = (255, 0, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
+brick = (144, 69, 53)
+sky_blue= (52, 152, 219)
+
+gameDisplay = pygame.display.set_mode((800,800))
+pygame.display.set_caption('Unicorn Squad')
+
+running = True
+while running == True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            break
+
+    gameDisplay.fill(sky_blue)
+
+    pygame.display.update()
+
+pygame.display.quit()
+
