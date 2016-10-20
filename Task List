@@ -4,6 +4,13 @@ combine graphics with controls
 figure out how to get pieces of food to show up at random times and places. While always making sure there is a piece on the map
 figure out an optimal size for the screen to make it difficult enough but no too easy.
 need to create grid system for unicorn to follow. Can only be in certain directions/orientations.
-
-
-
+Creation of different classes
+Being able to move the unicorn around by using keyboard
+Ensure we are using the right image of the unicorn based on orientation
+Insert code to end the game if the unicorn encounters a rainbow
+Use python mixer for background music
+Create a scoreboard that counts the number of “food eaten”
+Create a reset button that allows the game to start over
+Create a leaderboard so people can compare themselves
+Create popup message that explains to someone how to play
+Create a way to pause the game (aka press spacebar)
