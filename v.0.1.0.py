@@ -142,7 +142,7 @@ def gameLoop():
         lead_x += lead_x_change
         lead_y += lead_y_change
         
-        gameDisplay.fill(white)
+        gameDisplay.fill(sky_blue)
 
         AppleThickness = 30
         pygame.draw.rect(gameDisplay, red, [randAppleX, randAppleY, AppleThickness, AppleThickness])
