@@ -89,7 +89,13 @@ class PlayerController(object):
 	def __init__(self,models):
 		self.models = models
 
-	#TODO: add some events here 
+	def handle_event(self,event):
+		if event.type == pygame.KEYDOWN:
+			for model in self.models:
+				if event.key == pygame.K_LEFT:
+					model.x -= 10
+        		if event.key == pygame.K_RIGHT:
+					model.x += 10
 
 def main():
 	pygame.init()
@@ -108,13 +114,14 @@ def main():
 	views.append(PainTrainView(train))
 
 	# TODO: Add controller
-
+	controller = PlayerController([player])
 	running = True
 	while running == True:
 		for event in pygame.event.get():
+			controller.handle_event(event)
 			if event.type == pygame.QUIT:
 				running = False
-		
+
 		if player.train_wreck(train):
 			train.dx = 0
 			print "Game over!"
