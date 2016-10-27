@@ -1,6 +1,9 @@
 import sys
 import pygame
 import random
+from model import *
+from viewer import *
+from controller import *
 
 
 pygame.display.init()
@@ -46,7 +49,7 @@ font = pygame.font.SysFont(None, 25)
 clock.tick(FPS)
 
 
-gameLoop()
+controller.control.gameLoop()
 
 pygame.display.quit()
 pygame.quit()
