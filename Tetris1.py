@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, random
 from pygame.locals import *
 
 '''Color Definitions'''
@@ -12,6 +12,8 @@ Yellow = (240, 240, 0.0)
 Black = (0.0,0.0,0.0)
 White = (255, 255, 255)
 
+colors = [Purple, Red, Green, Aqua, Orange, Blue, Yellow]
+
 '''Dimensions for Screen and Tetris Board'''
 block_size = 20 #multiplier for pixels to represent a block
 board_height = 20
@@ -24,48 +26,49 @@ left_margin = 220
 top_margin = 70
 
 '''Tetris Pieces'''
-t_block = [“00000”,
-    	“00000”,
-    	“00100”,
-    	“01110”,
-    	“00000”]
+t_block = [“OOOOO”,
+    	“OOOOO”,
+    	“OOX00”,
+    	“OXXXO”,
+    	“OOOOO”]
 
-s_block = [“00000”,
-    	“00000”,
-    	“00110”,
-    	“01100”,
-    	“00000”]
-    
-z_block = [“00000”,
-    	“00000”,
-    	“01100”,
-    	“00110”,
-    	“00000”]
+s_block = [“OOOOO”,
+    	“OOOOO”,
+    	“OOXXO”,
+    	“OXXOO”,
+    	“OOOOO”]
 
-i_block = [“00000”,
-    	“00000”,
-    	“11110”,
-    	“00000”,
-    	“00000”]
+z_block = [“OOOOO”,
+    	“OOOOO”,
+    	“OXXOO”,
+    	“OOXXO”,
+    	“OOOOO”]
 
+i_block = [“OOOOO”,
+    	“OOOOO”,
+    	“XXXXO”,
+    	“OOOOO”,
+    	“OOOOO”]
 
-l_block = [“00000”,
-    	“00010”,
-    	“11110”,
-    	“00000”,
-    	“00000”]
+l_block = [“OOOOO”,
+    	“OOOXO”,
+    	“XXXXO”,
+    	“OOOOO”,
+    	“OOOOO”]
 
-j_block = [“00000”,
-    	“01000”,
-    	“01111”,
-    	“00000”,
-    	“00000”]
+j_block = [“OOOOO”,
+    	“OXOOO”,
+    	“OXXXX”,
+    	“OOOOO”,
+    	“OOOOO”]
 
-o_block = [“00000”,
-    	“00000”,
-    	“01100”,
-    	“01100”,
-    	“00000”]
+o_block = [“OOOOO”,
+    	“OOOOO”,
+    	“OXXOO”,
+    	“OXXOO”,
+    	“OOOOO”]
+
+pieces = [t_block, s_block, z_block, i_block, l_block, j_block, o_block]
 
 def main():
     global screen
@@ -86,12 +89,25 @@ def main():
 def addBoard():
     board = []
     for i in range(board_width):
-        row = [None]*board_height
+        row = []*board_height
         board.append(row)
     return board
 
 def drawBoard(board):
     pygame.draw.rect(screen, White, (left_margin, top_margin, board_pix_width, board_pix_height), 5)
+
+def makeNewPiece():
+    block = random.choice(pieces) #randomly chooses one of the seven pieces
+    chosen_color = random.choice(colors)
+    new_block = [block,chosen_color]
+    return new_block
+
+def draw_box(row, col, new_block, xpixel, ypixel):
+    xpix = left_margin + (xpixel * block_size)
+    ypix = top_margin + (ypixel * block_size)
+    pygame.draw.rect(screen,new_block[1], xpix, ypix, block_size, block_size)
+
+    
 
 if __name__ == '__main__':
     main()
