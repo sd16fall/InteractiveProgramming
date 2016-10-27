@@ -12,7 +12,6 @@ Yellow = (240, 240, 0.0)
 Black = (0.0,0.0,0.0)
 White = (255, 255, 255)
 
-
 '''Dimensions for Screen and Tetris Board'''
 block_size = 20 #multiplier for pixels to represent a block
 board_height = 20
@@ -22,9 +21,54 @@ board_pix_width = board_width * block_size
 screen_height = 480
 screen_width = 640
 left_margin = 220
-top_margin = 80
+top_margin = 70
+
+'''Tetris Pieces'''
+t_block = [“00000”,
+    	“00000”,
+    	“00100”,
+    	“01110”,
+    	“00000”]
+
+s_block = [“00000”,
+    	“00000”,
+    	“00110”,
+    	“01100”,
+    	“00000”]
+    
+z_block = [“00000”,
+    	“00000”,
+    	“01100”,
+    	“00110”,
+    	“00000”]
+
+i_block = [“00000”,
+    	“00000”,
+    	“11110”,
+    	“00000”,
+    	“00000”]
+
+
+l_block = [“00000”,
+    	“00010”,
+    	“11110”,
+    	“00000”,
+    	“00000”]
+
+j_block = [“00000”,
+    	“01000”,
+    	“01111”,
+    	“00000”,
+    	“00000”]
+
+o_block = [“00000”,
+    	“00000”,
+    	“01100”,
+    	“01100”,
+    	“00000”]
 
 def main():
+    global screen
     pygame.init()
 
     FPS = 30 #frames per second
@@ -38,16 +82,16 @@ def main():
     #            pygame.quit()
     #            sys.exit
     pygame.display.update()
-    
-    def drawBoard(screen):
+
+def addBoard():
     board = []
     for i in range(board_width):
         row = [None]*board_height
         board.append(row)
-        return board
+    return board
 
+def drawBoard(board):
     pygame.draw.rect(screen, White, (left_margin, top_margin, board_pix_width, board_pix_height), 5)
 
 if __name__ == '__main__':
     main()
-
