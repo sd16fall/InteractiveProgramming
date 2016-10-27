@@ -50,23 +50,23 @@ i_block = ['OOOOO',
     	'OOOOO',
     	'OOOOO']
 
-l_block = [‘OOOOO’,
-    	‘OOOXO’,
-    	‘XXXXO’,
-    	‘OOOOO’,
-    	‘OOOOO’]
+l_block = ['OOOOO',
+    	'OOOXO',
+    	'XXXXO’,
+    	'OOOOO’,
+    	'OOOOO’]
 
-j_block = [‘OOOOO’,
-    	‘OXOOO’,
-    	‘OXXXX’,
-    	‘OOOOO’,
-    	‘OOOOO’]
+j_block = ['OOOOO',
+    	'OXOOO',
+    	'OXXXX',
+    	'OOOOO',
+    	'OOOOO']
 
-o_block = [‘OOOOO’,
-    	‘OOOOO’,
-    	‘OXXOO’,
-    	‘OXXOO’,
-    	‘OOOOO’]
+o_block = ['OOOOO',
+    	'OOOOO',
+    	'OXXOO',
+    	'OXXOO',
+    	'OOOOO']
 
 pieces = [t_block, s_block, z_block, i_block, l_block, j_block, o_block]
 
