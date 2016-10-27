@@ -38,3 +38,16 @@ def main():
     #            pygame.quit()
     #            sys.exit
     pygame.display.update()
+    
+    def drawBoard(screen):
+    board = []
+    for i in range(board_width):
+        row = [None]*board_height
+        board.append(row)
+        return board
+
+    pygame.draw.rect(screen, White, (left_margin, top_margin, board_pix_width, board_pix_height), 5)
+
+if __name__ == '__main__':
+    main()
+
