@@ -121,8 +121,8 @@ FPS = 30 #frames per second
 screen = pygame.display.set_mode((800, 600))
 screen.fill(0,0,0)
 pygame.display.set_caption('Tetris')
-    while event == True : #main game loop
-            for event in pygame.event.get():
+while event == True : #main game loop
+    for event in pygame.event.get():
 
 
     #add music code here
@@ -131,6 +131,6 @@ pygame.display.set_caption('Tetris')
     pygame.mixer.music.stop()
             
 pygame.quit()
-               pygame.display.update()
+    pygame.display.update()
 
 
