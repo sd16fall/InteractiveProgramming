@@ -22,9 +22,9 @@ SLATEGRAY = (112,128,144)
 
 """Model classes"""
 class Player(object):
-	def __init__(self,x=0,y=0,width=50,height=50):
+	def __init__(self,x=0,y=0,width=25,height=25):
 		# places player centered above the coordinate given
-		self.x = x-(width/2)
+		self.x = x
 		self.y = y-height
 		self.width = width
 		self.height = height
@@ -34,12 +34,12 @@ class Player(object):
 		pass
 
 	def train_wreck(self, train):
-		return (train.x+(train.width/2)) > (self.x-(self.width/2))
+		return (train.x+train.width) > self.x
 
 class PainTrain(object):
-	def __init__(self,x=0,y=0,width=50,height=50,dx=.01):
+	def __init__(self,x=0,y=0,width=200,height=200,dx=.01):
 		# places train centered above coordinate given
-		self.x = x-(width/2)
+		self.x = x
 		self.y = y-height
 		self.width = width
 		self.height = height
