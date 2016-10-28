@@ -22,7 +22,7 @@ SLATEGRAY = (112,128,144)
 
 """Model classes"""
 class Player(object):
-	def __init__(self,x=0,y=0,width=50,height=50,dx = 0):
+	def __init__(self,x=0,y=0,width=50,height=50,dx = 20):
 		# places player centered above the coordinate given
 		self.x = x
 		self.y = y-height
@@ -34,7 +34,7 @@ class Player(object):
 		return (train.x+train.width) > self.x
 
 	def shift_world(self):
-		return self.x > 450
+		return self.x > 350
 
 class PainTrain(object):
 	def __init__(self,x=0,y=0,width=200,height=200,dx=0):
@@ -50,7 +50,7 @@ class PainTrain(object):
 
 # classes for level objects
 class Ground(object):
-	def __init__(self, x = 0, y = 300, width = 600, height = 180,dx=-10):
+	def __init__(self, x = 0, y = 300, width = 600, height = 180,dx=-20):
 		self.x = x
 		self.y = y
 		self.width = width
@@ -58,7 +58,7 @@ class Ground(object):
 		self.dx = dx
 
 class Platform(object):
-	def __init__(self, x=0,y=0,width = 100, height = 20, dx=-10):
+	def __init__(self, x=0,y=0,width = 100, height = 20, dx=-20):
 		self.x = x
 		self.y = y
 		self.width = width
@@ -111,15 +111,9 @@ class Controller(object):
 		if event.type == pygame.KEYDOWN:
 			for model in self.models:
 				if event.key == pygame.K_LEFT:
-					print model
-					print "I'm here! %d,%d" % (model.x,model.dx)
 					model.x -= model.dx
-					print "Now I'm here! %d,%d" % (model.x,model.dx)
 				if event.key == pygame.K_RIGHT:
-					print model
-					print "I'm here! %d,%d" % (model.x,model.dx)
 					model.x += model.dx
-					print "Now I'm here! %d,%d" % (model.x,model.dx)
 
 def main():
 	pygame.init()
@@ -134,6 +128,7 @@ def main():
 	train = PainTrain(0,300)
 	#models = [train, player, ground, platform1]
 	controlled_models = [ground, platform1, player]
+	level_models = [ground,platform1]
 
 	# views
 	views = []
@@ -152,14 +147,14 @@ def main():
 				running = False
 
 		# some events:
-		"""if player.shift_world():
+		if player.shift_world():
 			player.dx = 0
 			for model in level_models:
 				model.dx = -20
 		else:
 			player.dx = 20
 			for model in level_models:
-				model.dx = 0"""
+				model.dx = 0
 
 		if player.train_wreck(train):
 			train.dx = 0
