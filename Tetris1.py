@@ -107,7 +107,10 @@ def draw_box(row, col, new_block, xpixel, ypixel):
     ypix = top_margin + (ypixel * block_size)
     pygame.draw.rect(screen,new_block[1], xpix, ypix, block_size, block_size)
 
-    
-
+def draw_piece(piece, xpixel, ypixel):
+    for x in range(1,5):
+        for y in range(1,5):
+            draw_block(None, None, new_block[1], xpix + x*block_size, ypix + y*block_size)
+           
 if __name__ == '__main__':
     main()
