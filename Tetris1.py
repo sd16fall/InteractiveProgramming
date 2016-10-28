@@ -52,9 +52,9 @@ i_block = ['OOOOO',
 
 l_block = ['OOOOO',
     	'OOOXO',
-    	'XXXXO’,
-    	'OOOOO’,
-    	'OOOOO’]
+    	'XXXXO',
+    	'OOOOO',
+    	'OOOOO']
 
 j_block = ['OOOOO',
     	'OXOOO',
@@ -67,6 +67,7 @@ o_block = ['OOOOO',
     	'OXXOO',
     	'OXXOO',
     	'OOOOO']
+
 
 pieces = [t_block, s_block, z_block, i_block, l_block, j_block, o_block]
 
@@ -86,6 +87,9 @@ def main():
     #            sys.exit
     pygame.display.update()
 
+def run_game():
+    board = addBoard()
+    
 def addBoard():
     board = []
     for i in range(board_width):
@@ -102,7 +106,7 @@ def makeNewPiece():
     new_block = [block,chosen_color]
     return new_block
 
-def draw_box(row, col, new_block, xpixel, ypixel):
+def draw_block(row, col, new_block, xpixel, ypixel):
     xpix = left_margin + (xpixel * block_size)
     ypix = top_margin + (ypixel * block_size)
     pygame.draw.rect(screen,new_block[1], xpix, ypix, block_size, block_size)
@@ -111,6 +115,11 @@ def draw_piece(piece, xpixel, ypixel):
     for x in range(1,5):
         for y in range(1,5):
             draw_block(None, None, new_block[1], xpix + x*block_size, ypix + y*block_size)
-           
+
+def make_txt(txt, font, color):
+    surf = font.render(txt, True, color)
+    return surf, surf.get_rect()
+    
+
 if __name__ == '__main__':
     main()
