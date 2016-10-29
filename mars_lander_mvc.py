@@ -47,9 +47,9 @@ class LanderView(pygame.sprite.Sprite):
         # Update the position of this object by setting the values of rect.x and rect.y
         self.rect = self.image.get_rect()
 
-        def draw(self, model):
-            self.rect.center =
+        def update(self, model):
             model = self.model
+            self.rect.center = (model.X, model.Y)
             pygame.draw
 
 class Gauge(object):
@@ -83,6 +83,7 @@ def main():
     lander = Lander()
 
     lander_view = LanderView(lander)
+    lander_sprite = pygame.sprite.Group(lander_view)
     gauge = Gauge(lander)
 
     lander = LanderController([lander])
@@ -96,11 +97,15 @@ def main():
 
         lander.step()
         background = pygame.image.load('background.jpg')
+
         # Use smoothscale() to stretch the background image to fit the entire window:
         background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight))
         screen.blit(background,(0,0))
 
-        lander_view.draw(background)
+        lander_sprite.clear(screen,background)
+        lander_sprite.update()
+        lander_sprite.draw(screen)
+
         gauge.draw(background)
 
         pygame.display.update()
