@@ -3,14 +3,14 @@
 import pygame
 import math
 
-WindowWidth = 640 # width of the program's window, in pixels
-WindowHeight = 480 # height in pixels
+WindowWidth = 640  # width of the program's window, in pixels
+WindowHeight = 480  # height in pixels
 
 class Lander(object):
-"""Model of Lander, with attributes, X,Y,Rotation,Fuel,dX, and dY
+   """Model of Lander, with attributes, X,Y,Rotation,Fuel,dX, and dY
    and methods gravity_update ,roll, and fire_thrusters"""
    def __init__(self):
-      self.X = 600 #Lander X coordinate in Pixels
+      self.X = 600  #Lander X coordinate in Pixels
       self.Y = 400 #Lander Y coordinate in Pixels
       self.Rotation = 0 #Lander vertical axis orientation in degrees (from -180 to 180)
       self.Fuel = 1200 #Lander fuel in milliseconds of thruster time
@@ -34,30 +34,26 @@ class Lander(object):
       self.Y += Dy * duration/1000
 
 class LanderView(pygame.sprite.Sprite):
-   
-	  """Handles display of lander"""
+   """Handles display of lander"""
    def __init__(self, model):
-         self.model = model
-
-	 pygame.sprite.Sprite.__init__(self)
-
-	 #Load an imgae from a file
-	 self.image.load('lander.png')
-	 # Fetch the rectangle object that has the dimensions of the image
-	 # Update the position of this object by setting the values of rect.x and rect.y
-	 self.rect = self.image.get_rect()
-
+      self.model = model
+      pygame.sprite.Sprite.__init__(self)
+      #Load an imgae from a file
+      self.image.load('lander.png')
+      # Fetch the rectangle object that has the dimensions of the image
+      # Update the position of this object by setting the values of rect.x and rect.y
+      self.rect = self.image.get_rect()
    def update(self, model):
       model = self.model
       self.rect.center = (model.X, model.Y)
       pygame.draw
 
 class Gauge(object):
-	"""handles display of fuel, altitude, and velocity guages"""
+    """handles display of fuel, altitude, and velocity guages"""
 
 class LanderController(object):
-	"""Controls key-presses to rotate lander and fire thrusters
-		(calls lander methods)"""
+   """Controls key-presses to rotate lander and fire thrusters
+        (calls lander methods)"""
    def __init__(self,models):
       self.models = models
    def handle_update(self,duration):
@@ -66,13 +62,13 @@ class LanderController(object):
          for model in self.models:
             model.roll_left(duration)
       if keys[K_RIGHT]:
-	 for model in self.models:
-	       model.roll_left(duration)
+         for model in self.models:
+            model.roll_left(duration)
       if keys[K_UP]:
-	 for model in self.models:
-	       model.thruster_fire(duration)
-	 for model in self.models:
-	       model.update(duration)
+         for model in self.models:
+           model.thruster_fire(duration)
+      for model in self.models:
+           model.update(duration)
 def main():
    """Main function for the code"""
    pygame.init()
@@ -94,16 +90,16 @@ def main():
          if event.type == pygame.QUIT:
             running = False
             controller.handle_update(20)
-	    background = pygame.image.load('background.jpg')
-	    # Use smoothscale() to stretch the background image to fit the entire window:
-	    background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight))
-	    screen.blit(background,(0,0))
-	    lander_sprite.clear(screen,background)
-	    lander_sprite.update()
-	    lander_sprite.draw(screen)
-	    gauge.draw(background)
-	    pygame.display.update()
-   pygame.quit()
+         background = pygame.image.load('background.jpg')
+         # Use smoothscale() to stretch the background image to fit the entire window:
+         background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight))
+         screen.blit(background,(0,0))
+         lander_sprite.clear(screen,background)
+         lander_sprite.update()
+         lander_sprite.draw(screen)
+         gauge.draw(background)
+         pygame.display.update()
+      pygame.quit()
 
 
 if __name__ == '__main__':
