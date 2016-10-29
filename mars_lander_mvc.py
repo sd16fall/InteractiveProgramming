@@ -77,37 +77,37 @@ class LanderController(object):
 
 
 def main():
+   
     """Main function for the code"""
-    pygame.init()
+   pygame.init()
 
-    screen = pygame.display.set_mode((WindowWidth, WindowHeight))
+   screen = pygame.display.set_mode((WindowWidth, WindowHeight))
 
-    lander = Lander()
+   lander = Lander()
 
-    lander_view = LanderView(lander)
-    gauge = Gauge(lander)
+   lander_view = LanderView(lander)
+   gauge = Gauge(lander)
 
-    lander = LanderController([lander])
+   lander = LanderController([lander])
+   clock = pygame.time.Clock()
+   running = True
+   while running == True:
+      clock.tick(50)
+      for event in pygame.event.get():
+         if event.type == pygame.QUIT:
+             running = False
+   controller.handle_update(20)
+   background = pygame.image.load('background.jpg')
+   # Use smoothscale() to stretch the background image to fit the entire window:
+   background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight))
+   screen.blit(background,(0,0))
 
-    running = True
-    while running == True:
-        for event in pygame.event.get():
-            controller.handle_event(event)
-            if event.type == pygame.QUIT:
-                running = False
+   lander_view.draw(background)
+   gauge.draw(background)
 
-        lander.step()
-        background = pygame.image.load('background.jpg')
-        # Use smoothscale() to stretch the background image to fit the entire window:
-        background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight))
-        screen.blit(background,(0,0))
-
-        lander_view.draw(background)
-        gauge.draw(background)
-
-        pygame.display.update()
-
-    pygame.quit()
+   pygame.display.update()
+      
+   pygame.quit()
 
 if __name__ == '__main__':
-    main()
+   main()
