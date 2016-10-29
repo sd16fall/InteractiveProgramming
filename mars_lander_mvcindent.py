@@ -39,17 +39,17 @@ class LanderView(pygame.sprite.Sprite):
       self.model = model
       pygame.sprite.Sprite.__init__(self)
       #Load an imgae from a file
-      self.image.load('lander.png')
+      self.image = pygame.image.load('lander.png')
       # Fetch the rectangle object that has the dimensions of the image
       # Update the position of this object by setting the values of rect.x and rect.y
       self.rect = self.image.get_rect()
    def update(self, model):
       model = self.model
       self.rect.center = (model.X, model.Y)
-      pygame.draw
+      #pygame.draw
 
-class Gauge(object):
-    """handles display of fuel, altitude, and velocity guages"""
+#class Gauge(object):
+    #"""handles display of fuel, altitude, and velocity guages"""
 
 class LanderController(object):
    """Controls key-presses to rotate lander and fire thrusters
@@ -79,7 +79,7 @@ def main():
    lander = Lander()
    lander_view = LanderView(lander)
    lander_sprite = pygame.sprite.Group(lander_view)
-   gauge = Gauge(lander)
+   #gauge = Gauge(lander)
 
    lander = LanderController([lander])
    clock = pygame.time.Clock()
@@ -95,11 +95,11 @@ def main():
          background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight))
          screen.blit(background,(0,0))
          lander_sprite.clear(screen,background)
-         lander_sprite.update()
+         lander_sprite.update(lander)
          lander_sprite.draw(screen)
-         gauge.draw(background)
+         #gauge.draw(background)
          pygame.display.update()
-      pygame.quit()
+   pygame.quit()
 
 
 if __name__ == '__main__':
