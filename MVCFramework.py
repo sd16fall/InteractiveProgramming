@@ -16,106 +16,136 @@ MARGIN = 5
 # Create a 2 dimensional array. A two dimensional
 # array is simply a list of lists.
 class Grid(object):
-    def grid(self):
-        grid = []
-        for row in range(10):
-            # Add an empty array that will hold each cell
-            # in this row
-            grid.append([])
-            for column in range(10):
-                grid[row].append(0)  # Append a cell
+	def __init__(self):
+		n = 10
+		self.grid = []
+		for row in range(10):
+			# Add an empty array that will hold each cell
+			# in this row
+			self.grid.append([])
+			for column in range(10):
+				self.grid[row].append(0)  # Append a cell
+		self.int_column = 0
+		self.int_row = 9
+		self.grid[self.int_row][self.int_column] = 1
 
 class GridView(object):
-    #Draws the grid 
-    pass
+	def __init__(self, model):
+		self.model = model
+		
+	def draw(self, screen):
+		for row in range(10):
+			for column in range(10):
+				color = WHITE
+				if self.model.grid[row][column] == 1:
+					color = GREEN
+				pygame.draw.rect(screen,
+								 color,
+								 [(MARGIN + WIDTH) * column + MARGIN,
+								  (MARGIN + HEIGHT) * row + MARGIN,
+								  WIDTH,
+								  HEIGHT])
+	pass
 
 class GridController(object):
-    #Colors in grid spaces when filled in by the block
-    pass
+	def __init__(self, model):
+		self.model = model
+
+	def grid_event(self, event):
+		if event.type == pygame.KEYDOWN:       
+			if event.key == pygame.K_UP and self.model.int_row != 0:
+				row = self.model.int_row - 1
+				column = self.model.int_column
+				self.model.grid[row][column] = 1
+				self.model.int_row = row
+				self.model.int_column = column
+				self.model.grid[row+1][column] = 0
+			if event.key == pygame.K_RIGHT and self.model.int_column != 9:
+				row = self.model.int_row
+				column = self.model.int_column + 1
+				self.model.grid[row][column] = 1
+				self.model.int_row = row
+				self.model.int_column = column
+				self.model.grid[row][column-1] = 0
+			if event.key == pygame.K_LEFT and self.model.int_column != 0:
+				row = self.model.int_row
+				column = self.model.int_column - 1
+				self.model.grid[row][column] = 1
+				self.model.int_row = row
+				self.model.int_column = column
+				self.model.grid[row][column+1] = 0
+			if event.key == pygame.K_DOWN and self.model.int_row != 9:
+				row = self.model.int_row + 1
+				column = self.model.int_column
+				self.model.grid[row][column] = 1
+				self.model.int_row = row
+				self.model.int_column = column
+				self.model.grid[row-1][column] = 0
 
 class Block(object):
-    def __init__(self):
-        #Initializes the block
-        pass
-    def win_condition(self):
-        #When the block reaches a certain point on the grid, a win condition is applied
-        pass
-    def start_condition(self):
-        #Defines where the block will begin
-        pass
-    def lose_condition(self):
-        #Defines how the play will lose
-        pass
+	def __init__(self):
+		#Initializes the block
+		pass
+	def win_condition(self):
+		#When the block reaches a certain point on the grid, a win condition is applied
+		pass
+	def start_condition(self):
+		#Defines where the block will begin
+		pass
+	def lose_condition(self):
+		#Defines how the play will lose
+		pass
 
 class BlockView(object):
-    #Defines all six views of the block in relation to each other
-    pass
+	#Defines all six views of the block in relation to each other
+	pass
 
 class BlockController(object):
-    #Defines how player input and how pressing directional keys will rotate the block on its side
-    pass
+	#Defines how player input and how pressing directional keys will rotate the block on its side
+	pass
 
-        
+		
  
-# Set row 1, cell 5 to one. (Remember rows and
-# column numbers start at zero.)
-#grid[1][5] = 1
 def main(): 
-    # Initialize pygame
-    pygame.init()
-     
-    # Set the HEIGHT and WIDTH of the screen
-    WINDOW_SIZE = [255, 255]
-    screen = pygame.display.set_mode(WINDOW_SIZE)
-     
-    # Set title of screen
-    pygame.display.set_caption("Array Backed Grid")
-     
-    # Loop until the user clicks the close button.
-    done = False
-     
-    # Used to manage how fast the screen updates
-    clock = pygame.time.Clock()
-     
-    # -------- Main Program Loop -----------
-    while not done:
-        for event in pygame.event.get():  # User did something
-            if event.type == pygame.QUIT:  # If user clicked close
-                done = True  # Flag that we are done so we exit this loop
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                # User clicks the mouse. Get the position
-                pos = pygame.mouse.get_pos()
-                # Change the x/y screen coordinates to grid coordinates
-                column = pos[0] // (WIDTH + MARGIN)
-                row = pos[1] // (HEIGHT + MARGIN)
-                # Set that location to one
-                grid[row][column] = 1
-                print("Click ", pos, "Grid coordinates: ", row, column)
-     
-        # Set the screen background
-        screen.fill(BLACK)
-     
-        # Draw the grid
-        for row in range(10):
-            for column in range(10):
-                color = WHITE
-                if grid[row][column] == 1:
-                    color = GREEN
-                pygame.draw.rect(screen,
-                                 color,
-                                 [(MARGIN + WIDTH) * column + MARGIN,
-                                  (MARGIN + HEIGHT) * row + MARGIN,
-                                  WIDTH,
-                                  HEIGHT])
-     
-        # Limit to 60 frames per second
-        clock.tick(60)
-     
-        # Go ahead and update the screen with what we've drawn.
-        pygame.display.flip()
-     
-    # Be IDLE friendly. If you forget this line, the program will 'hang'
-    # on exit.
-    pygame.quit()
+	# Initialize pygame
+	pygame.init()
+	# Set the HEIGHT and WIDTH of the screen
+	WINDOW_SIZE = [255, 255]
+	screen = pygame.display.set_mode(WINDOW_SIZE)
+	 
+	# Set title of screen
+	pygame.display.set_caption("Array Backed Grid")
+	 
+	# Loop until the user clicks the close button.
+	done = False
+	 
+	# Used to manage how fast the screen updates
+	clock = pygame.time.Clock()
+
+	grid_obj = Grid()
+	model = grid_obj
+	view = GridView(model)
+	controller = GridController(model)
+	 
+	# -------- Main Program Loop -----------
+
+	while not done:
+		for event in pygame.event.get():  # User did something
+			controller.grid_event(event)
+			if event.type == pygame.QUIT:  # If user clicked close
+				done = True  # Flag that we are done so we exit this loop
+	 
+		# Set the screen background
+		screen.fill(BLACK)
+		view.draw(screen) 
+		# Limit to 60 frames per second
+		clock.tick(60)
+	 
+		# Go ahead and update the screen with what we've drawn.
+		pygame.display.flip()
+	 
+	# Be IDLE friendly. If you forget this line, the program will 'hang'
+	# on exit.
+	pygame.quit()
 
 main()
