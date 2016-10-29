@@ -2,6 +2,7 @@
 
 import pygame
 import math
+import sys
 
 WindowWidth = 640 # width of the program's window, in pixels
 WindowHeight = 480 # height in pixels
@@ -60,24 +61,25 @@ class LanderController(object):
       (calls lander methods)"""
    def __init__(self,models):
       self.models = models
-   def handle_update(self):
+   def handle_update(self,duration):
       keys=pygame.key.get_pressed()
       if keys[K_LEFT]:
          for model in self.models:
-            model.roll_left()
+            model.roll_left(duration)
       if keys[K_RIGHT]:
          for model in self.models:
-            model.roll_left()
+            model.roll_left(duration)
       if keys[K_UP]:
          for model in self.models:
-            model.thruster_fire()
+            model.thruster_fire(duration)
       for model in self.models:
-         model.update()
+         model.update(duration)
 
 
 def main():
     """Main function for the code"""
     pygame.init()
+
     screen = pygame.display.set_mode((WindowWidth, WindowHeight))
 
     lander = Lander()
