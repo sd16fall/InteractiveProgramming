@@ -3,8 +3,8 @@
 import pygame
 import math
 
-WindowWidth = 1920  # width of the program's window, in pixels
-WindowHeight = 1080  # height in pixels
+WindowWidth = 1366  # width of the program's window, in pixels
+WindowHeight = 768  # height of the program's window, in pixels
 
 class Lander(object):
    """Model of Lander, with attributes, X,Y,Rotation,Fuel,dX, and dY
@@ -16,22 +16,37 @@ class Lander(object):
       self.Fuel = 1200 #Lander fuel in milliseconds of thruster time
       self.Dx = 0 #Lander velocity in pixels/second to the right
       self.Dy = 0 #Lander velocity in pixels/second up
-   def roll_right(self,duration):
-      "Given a duration since last tick in ms and itself, rolls right"
-      self.Rotation += 100 *duration/1000 #change this value to tune rollrate
-   def roll_left(self,duration):
-      "Given a duration since last tick in ms and itself, rolls left"
-      self.Rotation -= 100 * duration/1000 #change this value to tune rollrate
-   def thruster_fire(self,duration):
-       "Fire thrusters to update lander velocity"
+   def thruster_fire_right(self,duration):
+      "Given a duration since last tick in ms and itself, translates right"
+      #Checks if there is fuel, if there is translates and updates remaining fuel
+      if self.Fuel >= 0:
+          self.Dx += 1000/duration
+          self.Fuel -= duration
+   def thruster_fire_left(self,duration):
+      "Given a duration since last tick in ms and itself, translates left"
+      #Checks if there is fuel, if there is translates and updates remaining fuel
+      if self.Fuel >= 0:
+          self.Dx -= 1000/duration
+          self.Fuel -= duration
+   def thruster_fire_up(self,duration):
+       "Given a duration since last tick in ms and itself, translates up"
+       #Checks if there is fuel, if there is translates and updates remaining fuel
        if self.Fuel >= 0:
-          self.Dx += math.sin(math.radians(self.Rotation))* 100
-          self.Dy -= math.cos(math.radians(self.Rotation)) * 100
+          self.Dy -= 1000/duration
           self.Fuel -= duration
    def update(self,duration):
       self.Dy += 1 * duration #Accounts for gravity
       self.X += self.Dx * duration/1000
       self.Y += self.Dy * duration/1000
+   def reset(self):
+      " resets lander position and velocity to initial settings"
+      self.X = 100  #Lander X coordinate in Pixels
+      self.Y = 100 #Lander Y coordinate in Pixels
+      self.Rotation = 0 #Lander vertical axis orientation in degrees (from -180 to 180)
+      self.Fuel = 1200 #Lander fuel in milliseconds of thruster time
+      self.Dx = 0 #Lander velocity in pixels/second to the right
+      self.Dy = 0 #Lander velocity in pixels/second up
+     
 
 class LanderView(pygame.sprite.Sprite):
    """Handles display of lander"""
@@ -40,40 +55,63 @@ class LanderView(pygame.sprite.Sprite):
       pygame.sprite.Sprite.__init__(self)
       #Load an imgae from a file
       self.image = pygame.image.load('lander.png')
-      # Fetch the rectangle object that has the dimensions of the image
-      # Update the position of this object by setting the values of rect.x and rect.y
+      self.image = self.image.convert_alpha()
       self.rect = self.image.get_rect()
+
    def update(self, model):
       model = self.model
+      #Fetch the rectangle object that has the dimensions of the image
+      #Update the position of this object by setting the values of rect.x and rect.y
+      self.image = pygame.transform.rotate(self.image, model.Rotation)
+      self.rect = self.image.get_rect()
       self.rect.center = (model.X, model.Y)
+   def reset(self, outcome):
+      "takes input of the outcome ('WIN' or 'LOSE' strings) and then changes screen color to outcome state (red for lose, green for win)"
+      model = self.model
+      screen = pygame.display.set_mode((WindowWidth, WindowHeight))
+      rect = screen.get_rect()
+      if outcome == 'WIN':
+        pygame.draw.rect(screen, (0,255,0), rect, width=0) 
+      elif outcome == 'LOSE':
+        pygame.draw.rect(screen, (255,0,0), rect, width=0) 
 
-#class Gauge(object):
-    #"""handles display of fuel, altitude, and velocity guages"""
+
+class Gauge(object):
+  """handles display of fuel, altitude, and velocity guages"""
+  def __init__(self, model):
+    self.model = model
+
+  def draw(self, surface):
+     model = self.model
+     pygame.draw.line(surface, (255,0,0), (10, 480), (10, 480 - int(model.Fuel * .2)), 20) #draws a red line for the fuel guage , arbitrarily scaled
+    
 
 class LanderController(object):
    """Controls key-presses to rotate lander and fire thrusters
-        (calls lander methods)
-        Also handles sounds"""
-   def __init__(self,models):
-      self.models = models
-      pygame.mixer.init()
-      sounda= pygame.mixer.Sound("engines.wav")
-
-
+        (calls lander methods)"""
+   def __init__(self,model,view):
+      self.model = model
+      self.view = view
    def handle_update(self,duration):
-      keys=pygame.key.get_pressed()
-      if keys[pygame.K_a]:
-         for model in self.models:
-            model.roll_left(duration)
-      if keys[pygame.K_d]:
-         for model in self.models:
-            model.roll_left(duration)
-      if keys[pygame.K_w]:
-         for model in self.models:
-           model.thruster_fire(duration)
+      model = self.model
+      view = self.view
+      if model.Y >= (WindowHeight - 100) and model.Dx <= 10 and model.Dy <= 10 and model.Dx >= -10 and model.Dy >= -10:
+        view.reset("WIN")
+        model.reset()
+      elif model.Y >= (WindowHeight - 100):
+        view.reset("LOSE")
+        model.reset()
+      else:
+        keys=pygame.key.get_pressed()
+        if keys[pygame.K_a]:
+           model.thruster_fire_left(duration)
+        if keys[pygame.K_d]:
+           model.thruster_fire_right(duration)
+        if keys[pygame.K_w]:
+           model.thruster_fire_up(duration)
+        model.update(duration)
+
            
-      for model in self.models:
-           model.update(duration)
 def main():
    """Main function for the code"""
    pygame.init()
@@ -81,8 +119,8 @@ def main():
    lander = Lander()
    lander_view = LanderView(lander)
    lander_sprite = pygame.sprite.Group(lander_view)
-   #gauge = Gauge(lander)
-   controller = LanderController([lander])
+   gauge = Gauge(lander)
+   controller = LanderController(lander,lander_view)
    clock = pygame.time.Clock()
    running = True
    while running == True:
@@ -92,13 +130,13 @@ def main():
             running = False
       controller.handle_update(20)
       background = pygame.image.load('background.jpg')
-      # Use smoothscale() to stretch the background image to fit the entire window:
-      background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight))
+      background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight)) # Use smoothscale() to stretch the background image to fit the entire window
       screen.blit(background,(0,0))
       lander_sprite.clear(screen,background)
       lander_sprite.update(lander)
       lander_sprite.draw(screen)
-      #gauge.draw(background)
+      gauge.draw(screen)
+      pygame.display.flip()
       pygame.display.update()
    pygame.quit()
 
