@@ -4,7 +4,7 @@ import pygame
 import math
 
 WindowWidth = 1366  # width of the program's window, in pixels
-WindowHeight = 768  # height of the program's window, in pixels
+WindowHeight = 768  # ehight of the program's window, in pixels
 
 class Lander(object):
    """Model of Lander, with attributes, X,Y,Rotation,Fuel,dX, and dY
@@ -47,44 +47,44 @@ class Lander(object):
       self.Dx = 0 #Lander velocity in pixels/second to the right
       self.Dy = 0 #Lander velocity in pixels/second up
      
-
 class LanderView(pygame.sprite.Sprite):
    """Handles display of lander"""
-   def __init__(self, model):
+   def __init__(self, model, surface):
+      self.surface = surface
       self.model = model
       pygame.sprite.Sprite.__init__(self)
-      #Load an imgae from a file
+      #Load an image from a file
       self.image = pygame.image.load('lander.png')
       self.image = self.image.convert_alpha()
       self.rect = self.image.get_rect()
-
-   def update(self, model):
-      model = self.model
-      #Fetch the rectangle object that has the dimensions of the image
+   def update(self):
       #Update the position of this object by setting the values of rect.x and rect.y
-      self.image = pygame.transform.rotate(self.image, model.Rotation)
-      self.rect = self.image.get_rect()
-      self.rect.center = (model.X, model.Y)
+      self.rect.center = (self.model.X, self.model.Y)
    def reset(self, outcome):
-      "takes input of the outcome ('WIN' or 'LOSE' strings) and then changes screen color to outcome state (red for lose, green for win)"
-      model = self.model
-      screen = pygame.display.set_mode((WindowWidth, WindowHeight))
-      rect = screen.get_rect()
-      if outcome == 'WIN':
-        pygame.draw.rect(screen, (0,255,0), rect, width=0) 
-      elif outcome == 'LOSE':
-        pygame.draw.rect(screen, (255,0,0), rect, width=0) 
+     "takes input of the outcome ('WIN' or 'LOSE' strings) and then changes screen color to outcome state (red for lose, green for win)"
+     surface = self.surface
+     if outcome == 'WIN':
+        pygame.draw.line(surface, (0,255,0), (WindowWidth/2, WindowHeight), (WindowWidth/2, 0), 1366)
+        pygame.display.flip()
+        pygame.display.update()
+        pygame.time.delay(1000)
+     elif outcome == 'LOSE':
+        pygame.draw.line(surface, (255,0,0), (WindowWidth/2, WindowHeight), (WindowWidth/2 ,0), 1366)
+        pygame.display.flip()
+        pygame.display.update()
+        pygame.time.delay(1000)
 
 
 class Gauge(object):
   """handles display of fuel, altitude, and velocity guages"""
-  def __init__(self, model):
-    self.model = model
-
-  def draw(self, surface):
+  def __init__(self, model,surface):
+     self.model = model
+     self.surface = surface
+  def draw(self):
      model = self.model
-     pygame.draw.line(surface, (255,0,0), (10, 480), (10, 480 - int(model.Fuel * .2)), 20) #draws a red line for the fuel guage , arbitrarily scaled
-    
+     surface = self.surface
+     pygame.draw.line(surface, (255,0,0), (35, (WindowHeight - 50)), (35, (WindowHeight - 50) - int(model.Fuel * .2)), 20) #draws a red line for the fuel guage , arbitrarily scaled
+  
 
 class LanderController(object):
    """Controls key-presses to rotate lander and fire thrusters
@@ -95,10 +95,10 @@ class LanderController(object):
    def handle_update(self,duration):
       model = self.model
       view = self.view
-      if model.Y >= (WindowHeight - 100) and model.Dx <= 10 and model.Dy <= 10 and model.Dx >= -10 and model.Dy >= -10:
+      if model.Y >= (WindowHeight - 90) and model.Dx <= 10 and model.Dy <= 10 and model.Dx >= -10 and model.Dy >= -10:
         view.reset("WIN")
         model.reset()
-      elif model.Y >= (WindowHeight - 100):
+      elif model.Y >= (WindowHeight - 90):
         view.reset("LOSE")
         model.reset()
       else:
@@ -111,17 +111,18 @@ class LanderController(object):
            model.thruster_fire_up(duration)
         model.update(duration)
 
-           
 def main():
    """Main function for the code"""
    pygame.init()
    screen = pygame.display.set_mode((WindowWidth, WindowHeight))
    lander = Lander()
-   lander_view = LanderView(lander)
+   lander_view = LanderView(lander,screen)
    lander_sprite = pygame.sprite.Group(lander_view)
-   gauge = Gauge(lander)
+   gauge = Gauge(lander,screen)
    controller = LanderController(lander,lander_view)
    clock = pygame.time.Clock()
+   background = pygame.image.load('background.jpg')
+   background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight)) # Use smoothscale() to stretch the background image to fit the entire window
    running = True
    while running == True:
       clock.tick(50)
@@ -129,13 +130,11 @@ def main():
          if event.type == pygame.QUIT:
             running = False
       controller.handle_update(20)
-      background = pygame.image.load('background.jpg')
-      background = pygame.transform.smoothscale(background, (WindowWidth, WindowHeight)) # Use smoothscale() to stretch the background image to fit the entire window
       screen.blit(background,(0,0))
       lander_sprite.clear(screen,background)
-      lander_sprite.update(lander)
+      lander_sprite.update()
       lander_sprite.draw(screen)
-      gauge.draw(screen)
+      gauge.draw()
       pygame.display.flip()
       pygame.display.update()
    pygame.quit()
