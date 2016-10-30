@@ -18,10 +18,10 @@ class Lander(object):
       self.Dy = 0 #Lander velocity in pixels/second up
    def roll_right(self,duration):
       "Given a duration since last tick in ms and itself, rolls right"
-      self.Rotation += 10000 *duration/1000 #change this value to tune rollrate
+      self.Rotation += 50 *duration/1000 #change this value to tune rollrate
    def roll_left(self,duration):
       "Given a duration since last tick in ms and itself, rolls left"
-      self.Rotation -= 10000 * duration/1000 #change this value to tune rollrate
+      self.Rotation -= 50 * duration/1000 #change this value to tune rollrate
    def thruster_fire(self,duration):
        "Fire thrusters to update lander velocity"
        if self.Fuel >= 0:
@@ -39,12 +39,15 @@ class LanderView(pygame.sprite.Sprite):
       self.model = model
       pygame.sprite.Sprite.__init__(self)
       #Load an imgae from a file
-      self.image = pygame.image.load('lander.png')
-      # Fetch the rectangle object that has the dimensions of the image
-      # Update the position of this object by setting the values of rect.x and rect.y
+      self.image = pygame.image.load('lander.png').convert_alpha()
       self.rect = self.image.get_rect()
+
    def update(self, model):
       model = self.model
+      # Fetch the rectangle object that has the dimensions of the image
+      # Update the position of this object by setting the values of rect.x and rect.y
+      self.image = pygame.transform.rotate(self.image, model.Rotation)
+      self.rect = self.image.get_rect()
       self.rect.center = (model.X, model.Y)
 
 #class Gauge(object):
@@ -62,7 +65,7 @@ class LanderController(object):
             model.roll_left(duration)
       if keys[pygame.K_d]:
          for model in self.models:
-            model.roll_left(duration)
+            model.roll_right(duration)
       if keys[pygame.K_w]:
          for model in self.models:
            model.thruster_fire(duration)
@@ -97,6 +100,7 @@ def main():
       lander_sprite.update(lander)
       lander_sprite.draw(screen)
       #gauge.draw(background)
+      pygame.display.flip()
       pygame.display.update()
    pygame.quit()
 
