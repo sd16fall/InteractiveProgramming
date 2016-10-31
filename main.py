@@ -41,7 +41,7 @@ class Player(object):
 		return self.x < 130
 
 class PainTrain(object):
-	def __init__(self,x=0,y=0,width=200,height=200,constdx=.01,dx=0,shiftdx=-1):
+	def __init__(self,x=0,y=0,width=200,height=200,constdx=.05,dx=0,shiftdx=-1):
 		# places train centered above coordinate given
 		self.x = x
 		self.y = y-height
@@ -56,7 +56,7 @@ class PainTrain(object):
 
 # classes for level objects
 class Ground(object):
-	def __init__(self, x = 0, y = 300, width = 600, height = 180,dx=0,shiftdx=-1):
+	def __init__(self, x = 0, y = 300, width = 2400, height = 180,dx=0,shiftdx=-1):
 		self.x = x
 		self.y = y
 		self.width = width
@@ -114,15 +114,12 @@ class ObstacleView(object):
 class Controller(object):
 	def __init__(self,models):
 		self.models = models
-		self.player = models[2] # make sure this aligns with controlled_models in main
-		self.groundtest = models[1]
+		self.player = models[0] # make sure this aligns with controlled_models in main
 
 	def handle_event(self):
 		# time passed isn't actually time based... based on while loop efficiency
 		player = self.player
 		models = self.models
-		groundtest = self.groundtest
-		#print groundtest.x,player.x,time_passed
 		for model in models:
 			keys = pygame.key.get_pressed() # checking pressed keys
 			if keys[pygame.K_LEFT]:
@@ -144,19 +141,27 @@ def main():
 	# level models:
 	ground = Ground()
 	platform1 = Platform(10,10)
+	platform2 = Platform(800,10)
+	platform3 = Platform(1600,10)
+	platform4 = Platform(2000,10)
+	platform5 = Platform(2400,10)
 	# player/NPC models:
 	player = Player(300,300)
 	train = PainTrain(0,300)
 	#models = [train, player, ground, platform1]
-	controlled_models = [ground, platform1, player,train]
+	controlled_models = [player,train,ground,platform1,platform2,platform3,platform4,platform5]
 	level_models = [ground,platform1]
 
 	# views
 	views = []
-	views.append(GroundView(ground))
-	views.append(ObstacleView(platform1))
 	views.append(PlayerView(player))
 	views.append(PainTrainView(train))
+	views.append(GroundView(ground))
+	views.append(ObstacleView(platform1))
+	views.append(ObstacleView(platform2))
+	views.append(ObstacleView(platform3))
+	views.append(ObstacleView(platform4))
+	views.append(ObstacleView(platform5))
 
 	# TODO: Add controller
 	controller = Controller(controlled_models)
@@ -164,7 +169,7 @@ def main():
 	counter = 0
 
 	# variable to make speed lower
-	delta_speed = .0005 # good one is .00005
+	delta_speed = .00005 # good one is .00005
 
 	while running == True:
 		# Pretty awful way to slow player down.
