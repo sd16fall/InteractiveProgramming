@@ -19,15 +19,14 @@ class GameManager(object): #*args, **kwargs
 
         self.display_width = kwargs.pop('display_width')
         self.display_height = kwargs.pop('display_height')
-	#set game display size and color
+
         self.game_display = pygame.display.set_mode((self.display_width,self.display_height))
         self.game_display.fill(self.sky_blue)
-	#set caption for the game
         if 'caption' in kwargs:    
             pygame.display.set_caption(caption)
         else:
             pygame.display.set_caption('Unicorn Squad')
-	#Set fps
+
         self.clock = pygame.time.Clock()
         if 'FPS' in kwargs:    
             self.FPS = kwargs.pop('FPS')
@@ -35,20 +34,20 @@ class GameManager(object): #*args, **kwargs
             self.FPS = 10
         
         self.font = pygame.font.SysFont(None, 55)
-	#game exit
+
     def game_did_quit(self):
         gameExit = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameExit = True
         return gameExit
-	
+
     def add_icon(self,icon,location):
         self.game_display.blit(icon,location)
-	#set starting spot to center
+
     def get_center(self):
         return (self.display_width/2, self.display_height/2)
-	#identify if unicorn intersects carrot.
+
     def did_collide(self,obj1, obj2):
         if obj1.x > obj2.x and obj1.x < obj2.x + obj2.image_width or obj1.x + obj1.image_width > obj2.x and obj1.x + obj1.image_width < obj2.x + obj2.image_width:
             if obj1.y > obj2.y and obj1.y < obj2.y + obj2.image_height:
@@ -81,7 +80,7 @@ class SnakeGame(GameManager):
         textSurf, textRect = self.text_objects(msg,color)
         textRect.center = (self.display_width / 2), (self.display_height / 2) + y_displace
         self.game_display.blit(textSurf, textRect)
-    #places score on bottom right corner
+
     def score_to_screen(self, msg, color):
         textSurf, textRect = self.text_objects(msg, color)
         textRect = (self.display_width - 50), (self.display_height - 50)
@@ -106,7 +105,6 @@ class Image(object):
 
 #start_pos=(0,0),icon='food.png', image_width=50, image_height=50
 
-#init "food" image
 class Carrot(Image):
     def __init__(self,**kwargs):
         super(Carrot,self).__init__(**kwargs)
@@ -115,12 +113,11 @@ class Carrot(Image):
         self.x = round(random.randrange(0, display_width-self.image_width))
         self.y = round(random.randrange(0, display_height-self.image_height))
         self.start_pos = (self.x,self.y)
-#init rainbow image
+
 class Rainbow(Image):
     def __init__(self, **kwargs):
         super(Rainbow,self).__init__(**kwargs)
 
-#init unicorn/snake image
 class Snake(Image):
     def __init__(self,**kwargs):
         super(Snake,self).__init__(**kwargs)
@@ -129,8 +126,7 @@ class Snake(Image):
         self.direction = "right"
         self.delta_y = 0
         self.delta_x = 40
-	
-    #function to add rainbow to tail
+
     def add_to_tail(self):
         gameOver = False
         snake_head = []
@@ -148,8 +144,6 @@ class Snake(Image):
         
         return gameOver
 
-	
-    #function to handle orientation of unicorn depending on which direction it is going
     def handle_tail(self):
         if self.direction == "right":
             head = self.icon
@@ -165,7 +159,7 @@ class Snake(Image):
         
         return head
         
-    #init movement of unicorn
+
     def process_move(self):
         gameExit = False
         for event in pygame.event.get():
@@ -196,7 +190,6 @@ class Snake(Image):
         # self.delta_x = 0
         # self.delta_y = 0
 
-#manages player score
 class Player:
     def __init__(self):
         self.player_score = 0
@@ -213,7 +206,6 @@ class Player:
     def reset_score(self):
         self.player_score = 0    
 
-#main game loop
 def run_game(display_width,display_height):
     gameExit = False # HItting the close button (closing Window)
     gameOver = False # Internal game over view (Hitting the walls or your own tail)
@@ -227,7 +219,6 @@ def run_game(display_width,display_height):
 
     while not gameExit:
         while gameOver:
-	    #sets game over screen and options to continue
             game.game_display.fill(game.white)
             game.message_to_screen("Game Over!", game.red, -50)
             game.message_to_screen("Press C to play again, or Q to quit", game.black, 50)
