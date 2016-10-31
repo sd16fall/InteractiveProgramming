@@ -14,6 +14,10 @@ DONE:
 import pygame
 import math
 
+# Images
+gameover = pygame.image.load('gameover1.bmp')
+
+# Colors
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 BLUE = (0,0,255)
@@ -182,12 +186,14 @@ def main():
 				running = False
 
 		if player.train_wreck(train):
-			train.dx = 0
-			print "Game over!"
+			train.constdx = 0
+			player.dx = 0
 			running = False
 
+		# keep train moving
 		train.step()
 
+		# decrease speed of player (and all things relative to it)
 		for model in controlled_models:
 			# good delta speed is .00005
 			if model.dx > .01:
@@ -204,6 +210,14 @@ def main():
 			view.draw(screen)
 
 		pygame.display.update()
+
+	running = True
+	while running == True:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				running = False
+		screen.blit(gameover,(60,60))
+		pygame.display.flip()
 
 	pygame.quit()
 
