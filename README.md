@@ -1,6 +1,8 @@
 # InteractiveProgramming
+Prabha Dublish, Alex Grant, Jonathan Kohlmeier
 
-This is the base repo for the interactive programming project for Software Design, Fall 2016 at Olin College.
+Unicorn Squad
 
-This file is not a good project README.
-Replace the contents of this file before you submit your project.
+To play this game you must run the main.py file. In order to move the unicorn, press the arrow keys. If you run into yourself or naviagte outside of the game window, the game will end.
+
+
