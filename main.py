@@ -211,8 +211,15 @@ def main():
 
 		pygame.display.update()
 
-	screen.blit(gameover,(60,60))
-	pygame.display.flip()
+	running = True
+	while running == True:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				running = False
+		screen.blit(gameover,(60,60))
+		pygame.display.flip()
+
+	pygame.quit()
 
 if __name__ == '__main__':
 	main()
