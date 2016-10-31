@@ -41,16 +41,18 @@ class Player(object):
 		return self.x < 130
 
 class PainTrain(object):
-	def __init__(self,x=0,y=0,width=200,height=200,dx=0):
+	def __init__(self,x=0,y=0,width=200,height=200,constdx=.01,dx=0,shiftdx=-1):
 		# places train centered above coordinate given
 		self.x = x
 		self.y = y-height
 		self.width = width
 		self.height = height
+		self.constdx = constdx
 		self.dx = dx
+		self.shiftdx = shiftdx
 
 	def step(self):
-		self.x += self.dx
+		self.x += self.constdx
 
 # classes for level objects
 class Ground(object):
@@ -146,7 +148,7 @@ def main():
 	player = Player(300,300)
 	train = PainTrain(0,300)
 	#models = [train, player, ground, platform1]
-	controlled_models = [ground, platform1, player]
+	controlled_models = [ground, platform1, player,train]
 	level_models = [ground,platform1]
 
 	# views
@@ -160,6 +162,9 @@ def main():
 	controller = Controller(controlled_models)
 	running = True
 	counter = 0
+
+	# variable to make speed lower
+	delta_speed = .0005 # good one is .00005
 
 	while running == True:
 		# Pretty awful way to slow player down.
@@ -177,6 +182,17 @@ def main():
 			running = False
 
 		train.step()
+
+		for model in controlled_models:
+			# good delta speed is .00005
+			if model.dx > .01:
+				model.dx -= delta_speed
+			elif model.dx < -.01:
+				model.dx += delta_speed
+			if model.shiftdx > .01:
+				model.shiftdx -= delta_speed
+			elif model.shiftdx < -.01:
+				model.shiftdx += delta_speed
 
 		screen.fill(WHITE)
 		for view in views:
