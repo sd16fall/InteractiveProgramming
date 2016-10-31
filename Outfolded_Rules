@@ -1,0 +1,2 @@
+RULES:
+	The player begins at the red space indicated on the grid, which represents the position of a 		6 sided, 1X1 cube. Moving on the grid rotates and unfolds the cube, meaning that once 		the player has rolled onto a face of the cube, it cannot be used again. The objective is to 		reach the blue space on the grid. Green spaces indicate locations that can still be moved to.
