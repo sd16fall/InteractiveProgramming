@@ -7,7 +7,7 @@ window_width = 1200
 window_height = 1200
 class Pikachu(pygame.sprite.Sprite): #making the Pikachu act as a Paddle
 
-    def __init__(self):
+    def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('pikachu.png').convert_alpha()
         self.image = pygame.transform.flip(self.image, 1, 0)
@@ -17,32 +17,34 @@ class Pikachu(pygame.sprite.Sprite): #making the Pikachu act as a Paddle
         self.pikac.centery = window_height / 2.0
         #self.pika.centery = window_height / 2.0 #rect object in pygame has many built in attributes including values for centery, centerx, top, bottom, left, right etc
                                                 #this code starts the Pikachu in the middle left side of the screen
+        self.pika_rect = self.pikac.move(x,y)
+
+    def move_pika(self,key):
+        if 150 < self.rect.bottom < window_height:
+            if key[pygame.K_DOWN]:
+                self.rect.centery += 15
+            elif key[pygame.K_UP]:
+                self.rect.centery -= 15
+        elif self.rect.bottom >= window_height:
+            self.rect.centery -= 15
+        elif self.rect.bottom <= 150:
+            self.rect.centery += 15
 
 class PongBall(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        pika = Pikachu(0,0)
+        self.pika = (pika.pika_rect)
         self.image = pygame.image.load('pokeball.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (100,80)) #code to resize the ball image
         self.rect = self.image.get_rect()
         self.ball = self.rect
         self.ball.centery = window_height / 2.0 #taking the total window dimensions and dividing by 2 to get the ball in the center of the screen to start
         self.ball.centerx = window_width / 2.0
-        self.generate_pika()
+        #self.generate_pika()
 
-    def generate_pika(self):
-        self.pika = Pikachu()
-
-    def move_pika(self):
-        if 150 < self.pika.pikac.bottom < window_height:
-            if key[pygame.K_DOWN]:
-                self.pika.centery += 15
-            elif key[pygame.K_UP]:
-                self.pika.centery -= 15
-            print self.pika.centery
-        elif self.pika.bottom >= window_height:
-            self.pika.centery -= 15
-        elif self.pika.bottom <= 150:
-            self.pika.centery += 15
+    """def generate_pika(self):
+        self.pika = Pikachu()"""
 
     def set_ball(self):
         #if the ball is at position 0, then make it go left until it collides or hits the wall
@@ -89,14 +91,13 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((window_width, window_height))
     pygame.display.set_caption('Pokemon Pong')
-    pikachu = Pikachu()
+    pika = Pikachu(0,0)
     pongball = PongBall()
     running = True
     while running == True:
-        key = pygame.key.get_pressed()
+        pika.move_pika(pygame.key.get_pressed())
         pongball.set_ball()
         pongball.collision_wall()
-        pongball.move_pika()
         #pongball.collision_pad()
         #pongball.score()
         # pongball.random_move()
@@ -114,7 +115,7 @@ def main():
         background = pygame.image.load('grass.png')
         background = pygame.transform.smoothscale(background, (window_width, window_height))
         screen.blit(background, (0,0))
-        screen.blit(pikachu.image, pikachu.rect)
+        screen.blit(pika.image, pika.rect)
         screen.blit(pongball.image, pongball.rect)
         pygame.display.flip()
         pygame.display.update()
