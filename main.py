@@ -26,7 +26,7 @@ SLATEGRAY = (112,128,144)
 
 """Model classes"""
 class Player(object):
-	def __init__(self,x=0,y=0,width=50,height=50,dx=1,dy=0,shiftdx=0):
+	def __init__(self,x=0,y=0,width=50,height=50,dx=1,dy=0,shiftdx=0,jumpdy=-.75):
 		# places player centered above the coordinate given
 		self.x = x
 		self.y = y-height
@@ -35,6 +35,7 @@ class Player(object):
 		self.dx = dx
 		self.dy = dy
 		self.shiftdx = shiftdx
+		self.jumpdy = jumpdy # variable dy is set to when controller jumps
 
 	def train_wreck(self, train):
 		return (train.x+train.width) > self.x
@@ -142,11 +143,7 @@ class Controller(object):
 					model.x += model.dx
 
 		if keys[pygame.K_UP] and player.dy == 0:
-			player.dy = -2
-
-
-
-
+			player.dy = player.jumpdy
 
 def main():
 	pygame.init()
@@ -183,14 +180,10 @@ def main():
 	running = True
 	counter = 0
 
-
-
 	# variable to make speed lower
 	delta_speed = .00005 # good one is .00005
 
 	while running == True:
-		print player.y, player.dy
-
 		# Pretty awful way to slow player down.
 		counter += 1 # adjust this if it's running to slow. Sorry.
 		if counter%5 == 0:
@@ -212,10 +205,15 @@ def main():
 
 		# keep train moving
 		train.step()
-		player.y += player.dy
-		if player.dy != 0:
-			player.dy += 0.01
 
+		# code for player jumping
+		player.y += player.dy
+		# make player fall
+		if player.dy != 0:
+			player.dy += 0.001 # if you lower this, also lower jumpdy in player class
+		# make player's jump speed lower with time
+		if player.jumpdy < -.05:
+			player.jumpdy += delta_speed
 
 		# decrease speed of player (and all things relative to it)
 		for model in controlled_models:
