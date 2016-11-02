@@ -26,13 +26,14 @@ SLATEGRAY = (112,128,144)
 
 """Model classes"""
 class Player(object):
-	def __init__(self,x=0,y=0,width=50,height=50,dx=1,shiftdx=0):
+	def __init__(self,x=0,y=0,width=50,height=50,dx=1,dy=0,shiftdx=0):
 		# places player centered above the coordinate given
 		self.x = x
 		self.y = y-height
 		self.width = width
 		self.height = height
 		self.dx = dx
+		self.dy = dy
 		self.shiftdx = shiftdx
 
 	def train_wreck(self, train):
@@ -43,6 +44,9 @@ class Player(object):
 
 	def go_back(self):
 		return self.x < 130
+
+	def hit_ground(self,ground):
+		return (self.y + self.height) > ground.y
 
 class PainTrain(object):
 	def __init__(self,x=0,y=0,width=200,height=200,constdx=.05,dx=0,shiftdx=-1):
@@ -124,8 +128,8 @@ class Controller(object):
 		# time passed isn't actually time based... based on while loop efficiency
 		player = self.player
 		models = self.models
+		keys = pygame.key.get_pressed() # checking pressed keys
 		for model in models:
-			keys = pygame.key.get_pressed() # checking pressed keys
 			if keys[pygame.K_LEFT]:
 				if player.go_back():
 					model.x -= model.shiftdx
@@ -136,6 +140,13 @@ class Controller(object):
 					model.x += model.shiftdx
 				else:
 					model.x += model.dx
+
+		if keys[pygame.K_UP] and player.dy == 0:
+			player.dy = -2
+
+
+
+
 
 def main():
 	pygame.init()
@@ -172,10 +183,14 @@ def main():
 	running = True
 	counter = 0
 
+
+
 	# variable to make speed lower
 	delta_speed = .00005 # good one is .00005
 
 	while running == True:
+		print player.y, player.dy
+
 		# Pretty awful way to slow player down.
 		counter += 1 # adjust this if it's running to slow. Sorry.
 		if counter%5 == 0:
@@ -190,8 +205,17 @@ def main():
 			player.dx = 0
 			running = False
 
+		if player.hit_ground(ground):
+			player.dy = 0
+			player.y = ground.y - player.height
+
+
 		# keep train moving
 		train.step()
+		player.y += player.dy
+		if player.dy != 0:
+			player.dy += 0.01
+
 
 		# decrease speed of player (and all things relative to it)
 		for model in controlled_models:
