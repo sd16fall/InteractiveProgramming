@@ -26,7 +26,7 @@ SLATEGRAY = (112,128,144)
 
 """Model classes"""
 class Player(object):
-	def __init__(self,x=0,y=0,width=50,height=50,dx=1,dy=0,shiftdx=0,jumpdy=-.75):
+	def __init__(self,x=0,y=0,width=50,height=50,dx=1,dy=.001,shiftdx=0,jumpdy=-.75):
 		# places player centered above the coordinate given
 		self.x = x
 		self.y = y-height
@@ -47,7 +47,10 @@ class Player(object):
 		return self.x < 130
 
 	def hit_ground(self,ground):
-		return (self.y + self.height) > ground.y
+		return (self.y + self.height) >= ground.y and self.x < (ground.x+ground.width) and self.x > ground.x
+
+	def off_screen(self):
+		return self.y > 480
 
 class PainTrain(object):
 	def __init__(self,x=0,y=0,width=200,height=200,constdx=.05,dx=0,shiftdx=-1):
@@ -151,7 +154,7 @@ def main():
 
 	# models
 	# level models:
-	ground = Ground()
+	ground = Ground(x=0,width=600)
 	platform1 = Platform(10,10)
 	platform2 = Platform(800,10)
 	platform3 = Platform(1600,10)
@@ -193,7 +196,7 @@ def main():
 			if event.type == pygame.QUIT:
 				running = False
 
-		if player.train_wreck(train):
+		if player.train_wreck(train) or player.off_screen():
 			train.constdx = 0
 			player.dx = 0
 			running = False
@@ -201,7 +204,8 @@ def main():
 		if player.hit_ground(ground):
 			player.dy = 0
 			player.y = ground.y - player.height
-
+		else:
+			player.dy = .3
 
 		# keep train moving
 		train.step()
