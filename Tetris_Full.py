@@ -61,12 +61,6 @@ class Piece:
                 self.rotate -=1
         self.piece_array = Piece.pieces[self.piece_type][self.rotate]
 
-"""    def color():
-        For i in range(len[cells]):
-    	Row = cells[i]
-    	For j in range(len[cells]):
-        Color = row[j]"""
-
 '''Generating Board'''
 class Board:
     def __init__(self,screen):
@@ -80,7 +74,6 @@ class Board:
         for i in range(self.board_height):
             row = [0]*self.board_width
             self.board.append(row)
-        print 'board', self.board
         self.generate_piece()
 
     def generate_piece(self): #sets position on board for where piece shows up
@@ -103,13 +96,8 @@ class Board:
         bottom_of_piece = self.piece.piece_array[len(self.piece.piece_array)-2]
         #print bottom_of_piece
         for r in bottom_of_piece:
-            print "1"
             if r == 1:
-                print "2"
-                print "self y", self.y_piece
-                print self.board_height
                 if self.y_piece >= 15:
-                    print "3"
                     return True
         return False
 
@@ -117,18 +105,13 @@ class Board:
         for y in range(len(self.piece.piece_array)):
             for x in range(len(self.piece.piece_array[y])):
                 if self.piece.piece_array[y][x]:
-                    #print 'x', x, 'y', y
                     error = self.collision(x = x + dx, y = y + dy)
                     if error:
                         return error
 
     def can_move(self, dx, dy):
-        #print 'can x', self.x_piece
-        #print 'can y', self.y_piece
         new_dx = self.x_piece + dx
         new_dy = self.y_piece + dy
-        #print 'new_dx', new_dx
-        #print 'new_dy', new_dy
         if self.piece_hits_board(dx = new_dx, dy = new_dy):
             return False
         return True
@@ -140,15 +123,8 @@ class Board:
                     #print 'piece', self.piece.piece_array[y][x], 'board', self.board[y+1][x]
                     print self.piece.piece_array[len(self.piece.piece_array)-2]
                     if self.piece.piece_array[y][x] == self.board[y+1][x] or self.collision(x,y):
-
-                        print self.piece.piece_array[y][x]
-                        print self.board[y][x]
-                        print "hi"
                         self.board[y][x] = self.piece.piece_array[y][x]
-                        print self.board[y][x]
-
-                        #self.draw_blocks((0,0,225),offset_x = 0,offset_y = 0)
-                #self.piece.piece_array[y][x] = self.board[y + self.y_piece][x + self.x_piece]
+                        self.draw_board((0,0,225))
         self.generate_piece()
 
     def rotate_piece(self, clockwise = True):
@@ -198,8 +174,10 @@ class Board:
             for c in range(len(self.board[r])):
                 cell = self.board[r][c]
                 if cell == 1:
+                    x = self.block_size*(r + self.x_piece)
+                    y = self.block_size*(c + self.y_piece)
                     #print 'r', r, 'c',c
-                    pygame.draw.rect(self.screen, (0,0,225), (c, r, self.block_size, self.block_size))
+                    pygame.draw.rect(self.screen, (0,0,225), (x, y, self.block_size, self.block_size))
 
     def game_over(self):
         pass #return sum(self.board[0]) > 0 or sum(self.board[1]) > 0
