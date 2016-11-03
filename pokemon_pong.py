@@ -5,6 +5,8 @@ from pygame.locals import *
 
 window_width = 1200
 window_height = 1200
+p_wins = 0
+AI_wins = 0
 
 class Pikachu(pygame.sprite.Sprite): #making the Pikachu act as a Paddle
 
@@ -65,9 +67,11 @@ class PongBall(pygame.sprite.Sprite):
             pass
         elif self.ball.right >= window_width:
             self.ball.center = (600,600)
+            player_score()
             return self.set_ball()
         elif self.rect.left <= 0:
             self.ball.center = (600, 600)
+            AI_score()
             return self.set_ball()
 
     # def check_collision_wall(self):
@@ -109,10 +113,22 @@ class AIPikachu(pygame.sprite.Sprite):
             self.pikac.centery -=15
             if 150 > self.pikac.bottom:
                 self.direction = 'down'
+                
+def player_score():
+    global p_wins
+    p_wins += 1
+    print 'Player wins',p_wins
 
+def AI_score():
+    global AI_wins
+    AI_wins += 1
+    print 'AI wins', AI_wins
+    
 def main():
     pygame.init()
     screen = pygame.display.set_mode((window_width, window_height))
+    text = pygame.font.SysFont("Arial", 60)
+    pygame.display.set_caption('Pokemon Pong')
     pygame.display.set_caption('Pokemon Pong')
     pika = Pikachu(0,0)
     pongball = PongBall()
@@ -143,6 +159,10 @@ def main():
         #     pikachu.pika.centery -= 15
         # elif pikachu.pika.bottom <= 150:
         #     pikachu.pika.centery += 15
+        '''text'''
+        p_render = text.render(str(p_wins), 1, (255,0,0))
+        AI_render = text.render(str(AI_wins),1, (255,0,0))
+        
         '''image stuff'''
         background = pygame.image.load('grass.png')
         background = pygame.transform.smoothscale(background, (window_width, window_height))
@@ -150,8 +170,11 @@ def main():
         screen.blit(pika.image, pika.rect)
         screen.blit(pongball.image, pongball.rect)
         screen.blit(pika2.image, pika2.rect)
+        screen.blit(p_render, (50,10))
+        screen.blit(AI_render, (1100,10))
         pygame.display.flip()
         pygame.display.update()
+        
         '''quit event'''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
