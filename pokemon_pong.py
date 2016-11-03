@@ -47,7 +47,7 @@ class PongBall(pygame.sprite.Sprite):
     def set_ball(self):
         #if the ball is at position 0, then make it go left until it collides or hits the wall
         if self.ball.left > 0:
-            self.ball.move_ip(-5,2)
+            self.ball.move_ip(-10,0)
 
     """def collision_pikachu(self,target):
         print self.ball.colliderect(target)
