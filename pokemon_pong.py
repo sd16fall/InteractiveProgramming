@@ -155,7 +155,7 @@ while running == True:
     pongball.collision_wall()
     '''text'''
     text = pygame.font.SysFont("Arial", 60)
-    win_text = pygame.font.SysFont("Arial", 150)
+    win_text = pygame.font.SysFont("Arial", 100)
     p1_render = text.render(str(p1_wins), 1, (255,255,255))
     p2_render = text.render(str(p2_wins), 1, (255,255,255))
     '''image stuff'''
