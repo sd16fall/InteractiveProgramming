@@ -98,21 +98,14 @@ class AIPikachu(pygame.sprite.Sprite):
         self.direction = 'down'
 
     def move_AI(self): #if pikachu hits a wall, move in the opposite direction
-        original_direction = self.direction
-        current_direction = original_direction
-        if current_direction == 'down':
+        if self.direction == 'down':
             self.pikac.centery +=15
-            print self.pikac.bottom, window_height
             if self.pikac.bottom >= window_height:
-                current_direction = 'up'
-        elif current_direction == 'up':
+                self.direction = 'up'
+        elif self.direction == 'up':
             self.pikac.centery -=15
-            print "hi"
-            if 150 < self.pikac.bottom:
-                current_direction = 'down'
-        #print 'original', original_direction, 'curr', current_direction
-        #if original_direction != current_direction:
-        #    self.move_AI()
+            if 150 > self.pikac.bottom:
+                self.direction = 'down'
 
 def main():
     pygame.init()
