@@ -154,7 +154,7 @@ while running == True:
     pika2.move_AI()
     pongball.set_ball()
     pongball.collision_wall()
-    pongball.collision(pika)
+    #pongball.collision(pika)
     # pongball.collision_pikas()
 
     """if pygame.sprite.collide_rect(pika, pongball):
