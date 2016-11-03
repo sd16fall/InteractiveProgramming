@@ -6,7 +6,7 @@ from pygame.locals import *
 
 window_width = 1200
 window_height = 1200
-p_wins = 0
+p1_wins = 0
 p2_wins = 0
 
 class Pikachu(pygame.sprite.Sprite): #making the Pikachu act as a Paddle
@@ -161,8 +161,8 @@ while running == True:
     '''text'''
     text = pygame.font.SysFont("Arial", 60)
     win_text = pygame.font.SysFont("Arial", 150)
-    p1_render = text.render(str(p1_wins), 1, (255,0,0))
-    p2_render = text.render(str(p2_wins), 1, (255,0,0))
+    p1_render = win_text.render(str(p1_wins), 1, (255,0,0))
+    p2_render = win_text.render(str(p2_wins), 1, (255,0,0))
     '''image stuff'''
     background = pygame.image.load('grass.png')
     background = pygame.transform.smoothscale(background, (window_width, window_height))
@@ -178,4 +178,4 @@ while running == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-            pygame.quit()
+pygame.quit()
