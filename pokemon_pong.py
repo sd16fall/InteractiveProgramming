@@ -117,12 +117,12 @@ class AIPikachu(pygame.sprite.Sprite):
 def player_score():
     global p_wins
     p_wins += 1
-    print 'Player wins',p_wins
+    win_game
 
 def AI_score():
     global AI_wins
     AI_wins += 1
-    print 'AI wins', AI_wins
+    win_game()
 
 def win_game():
     global p_wins, AI_wins
