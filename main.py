@@ -3,13 +3,15 @@
 objects: screen, player, follower
 
 TODO:
+-walls
+-fix jumping with multiple grounds
+DONE:
+- simple objects for player sprite
 - train constant speed
 - player slows down
 - lose on collision
 - flat level
-
-DONE:
-- simple objects for player sprite"""
+"""
 
 import pygame
 import math
@@ -17,7 +19,7 @@ import math
 # Images
 gameover = pygame.image.load('gameover1.bmp')
 
-# Colors
+# Colors on rgb scale
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 BLUE = (0,0,255)
@@ -30,26 +32,33 @@ class Player(object):
 		# places player centered above the coordinate given
 		self.x = x
 		self.y = y-height
+		#size of player cube
 		self.width = width
 		self.height = height
 		self.dx = dx
 		self.dy = dy
+		#shiftdxs are for moving everything when the player moves
 		self.shiftdx = shiftdx
 		self.jumpdy = jumpdy # variable dy is set to when controller jumps
 
 	def train_wreck(self, train):
+		#train collision function
 		return (train.x+train.width) > self.x
 
 	def shift_world(self):
+		#shift world to left when past a certain point
 		return self.x > 350
 
 	def go_back(self):
+		#shift world to right when past a certain point
 		return self.x < 130
 
 	def hit_ground(self,ground):
-		return (self.y + self.height) >= ground.y and self.x < (ground.x+ground.width) and self.x > ground.x
+		#ground collision function for jumping
+		return (self.y + self.height) > ground.y and self.x < (ground.x+ground.width) and self.x > ground.x
 
 	def off_screen(self):
+		#if player goes off screen
 		return self.y > 480
 
 class PainTrain(object):
@@ -57,8 +66,10 @@ class PainTrain(object):
 		# places train centered above coordinate given
 		self.x = x
 		self.y = y-height
+		#size of chasing cube
 		self.width = width
 		self.height = height
+		#constant velocity
 		self.constdx = constdx
 		self.dx = dx
 		self.shiftdx = shiftdx
@@ -71,9 +82,11 @@ class Ground(object):
 	def __init__(self, x = 0, y = 300, width = 2400, height = 180,dx=0,shiftdx=-1):
 		self.x = x
 		self.y = y
+		#size of ground
 		self.width = width
 		self.height = height
 		self.dx = dx
+		#shiftdx is for moving the ground when player moves
 		self.shiftdx = shiftdx
 
 class Platform(object):
@@ -83,6 +96,7 @@ class Platform(object):
 		self.width = width
 		self.height = height
 		self.dx = dx
+		#shiftdx is for moving the ground when player moves
 		self.shiftdx = shiftdx
 
 """View classes"""
@@ -134,6 +148,7 @@ class Controller(object):
 		models = self.models
 		keys = pygame.key.get_pressed() # checking pressed keys
 		for model in models:
+			#movements of player
 			if keys[pygame.K_LEFT]:
 				if player.go_back():
 					model.x -= model.shiftdx
@@ -144,7 +159,6 @@ class Controller(object):
 					model.x += model.shiftdx
 				else:
 					model.x += model.dx
-
 		if keys[pygame.K_UP] and player.dy == 0:
 			player.dy = player.jumpdy
 
@@ -155,6 +169,7 @@ def main():
 	# models
 	# level models:
 	ground = Ground(x=0,width=600)
+	#5 different platforms
 	platform1 = Platform(10,10)
 	platform2 = Platform(800,10)
 	platform3 = Platform(1600,10)
@@ -197,10 +212,11 @@ def main():
 				running = False
 
 		if player.train_wreck(train) or player.off_screen():
+			#Player loses if train wreck occurs or goes off screen
 			train.constdx = 0
 			player.dx = 0
 			running = False
-
+		#when player is falling
 		if player.hit_ground(ground):
 			player.dy = 0
 			player.y = ground.y - player.height
@@ -230,7 +246,7 @@ def main():
 				model.shiftdx -= delta_speed
 			elif model.shiftdx < -.01:
 				model.shiftdx += delta_speed
-
+		#white background
 		screen.fill(WHITE)
 		for view in views:
 			view.draw(screen)
