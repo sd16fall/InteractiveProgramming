@@ -161,8 +161,8 @@ while running == True:
     '''text'''
     text = pygame.font.SysFont("Arial", 60)
     win_text = pygame.font.SysFont("Arial", 150)
-    p1_render = win_text.render(str(p1_wins), 1, (255,0,0))
-    p2_render = win_text.render(str(p2_wins), 1, (255,0,0))
+    p1_render = text.render(str(p1_wins), 1, (255,0,0))
+    p2_render = text.render(str(p2_wins), 1, (255,0,0))
     '''image stuff'''
     background = pygame.image.load('grass.png')
     background = pygame.transform.smoothscale(background, (window_width, window_height))
