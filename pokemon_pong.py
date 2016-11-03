@@ -9,7 +9,7 @@ window_height = 1200
 
 class Pikachu(pygame.sprite.Sprite): #making the Pikachu act as a Paddle
 
-    def __init__(self,x,y):
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('pikachu.png').convert_alpha()
         self.image = pygame.transform.flip(self.image, 1, 0)
@@ -18,7 +18,7 @@ class Pikachu(pygame.sprite.Sprite): #making the Pikachu act as a Paddle
         self.pikac = self.rect
         self.pikac.centery = window_height / 2.0 #rect object in pygame has many built in attributes including values for centery, centerx, top, bottom, left, right etc
                                                  #this code starts the Pikachu in the middle left side of the screen
-        self.pika_rect = self.pikac.move(x,y)
+        #self.pika_rect = self.pikac.move(x,y)
 
     def move_pika(self,key):
         if 150 < self.rect.bottom < window_height:
@@ -34,10 +34,12 @@ class Pikachu(pygame.sprite.Sprite): #making the Pikachu act as a Paddle
             self.rect.centery += 15
 
 class PongBall(pygame.sprite.Sprite):
-    def __init__(self, this_pika):
+    def __init__(self, this_pika, pika_two):
         pygame.sprite.Sprite.__init__(self)
-        pika = Pikachu(0,0)
+        pika = Pikachu()
+        pika2 = AIPikachu()
         self.pika = this_pika
+        self.pika2 = pika_two
         self.image = pygame.image.load('pokeball.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (100,80)) #code to resize the ball image
         self.rect = self.image.get_rect()
@@ -52,25 +54,16 @@ class PongBall(pygame.sprite.Sprite):
         if self.ball.left > 0 or self.ball.right < window_width:
             self.ball.move_ip(self.dx, self.dy)
 
-    """def collision_wall(self):
-        self.dx = -1*self.dx
-        self.dy = -1*self.dy
-        if self.ball.left <= 0:
-            #self.ball.move_ip(-self.dx, -self.dy)
-            self.ball.centery += self.dy
-            self.ball.centerx += self.dx
-        elif self.ball.right >= window_width:
-            pass
-        elif self.ball.top <= 0:
-            pass
-        elif self.ball.bottom >= window_height:
-            pass"""
-
-
     def collision_pikachu(self):
         if self.pika.rect.right >= self.ball.left:
-            print "pika bottom", self.pika.rect.bottom, 'pika top', self.pika.rect.top, 'ball top', self.ball.top, 'ball bottom', self.ball.bottom
             if (self.ball.bottom >= self.pika.rect.top and self.ball.bottom <= self.pika.rect.bottom) or  (self.ball.top <= self.pika.rect.top and self.ball.top >= self.pika.rect.bottom):
+                print "hi"
+                self.dx = -1*self.dx
+
+    def collision_pikachu2(self):
+        if self.ball.right >= self.pika2.rect.left:
+            print "pika bottom", self.pika2.rect.bottom, 'pika top', self.pika2.rect.top, 'ball top', self.ball.top, 'ball bottom', self.ball.bottom
+            if (self.ball.bottom >= self.pika2.rect.top and self.ball.bottom <= self.pika2.rect.bottom) or  (self.ball.top <= self.pika2.rect.top and self.ball.top >= self.pika2.rect.bottom):
                 print "hi"
                 self.dx = -1*self.dx
 
@@ -101,7 +94,7 @@ class PongBall(pygame.sprite.Sprite):
             return True
         return False"""
 
-class AIPikachu(pygame.sprite.Sprite):
+class AIPikachu(Pikachu):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('pikachu.png').convert_alpha()
@@ -113,63 +106,46 @@ class AIPikachu(pygame.sprite.Sprite):
         self.pikac.right = window_width
         self.direction = 'down'
 
-    def move_AI(self): #if pikachu hits a wall, move in the opposite direction
-        if self.direction == 'down':
-            self.pikac.centery +=15
-            if self.pikac.bottom >= window_height:
-                self.direction = 'up'
-        elif self.direction == 'up':
-            self.pikac.centery -=15
-            if 150 > self.pikac.bottom:
-                self.direction = 'down'
+    def move_AI(self,key):
+        if 150 < self.rect.bottom < window_height:
+            if key[pygame.K_x]:
+                self.rect.centery += 15
+                print "pika: " + str(self.rect.bottom)
+            elif key[pygame.K_s]:
+                self.rect.centery -= 15
 
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((window_width, window_height))
-    pygame.display.set_caption('Pokemon Pong')
-    pika = Pikachu(0,0)
-    pongball = PongBall(pika)
-    pika2 = AIPikachu()
-    running = True
-    while running == True:
-        pika.move_pika(pygame.key.get_pressed())
-        pika2.move_AI()
-        pongball.set_ball()
-        pongball.collision_pikachu()
-        pongball.collision_wall()
+        elif self.rect.bottom >= window_height:
+            self.rect.centery -= 15
+        elif self.rect.bottom <= 150:
+            self.rect.centery += 15
 
-        """if pygame.sprite.collide_rect(pika, pongball):
-            pongball.ball.centery -= 50
-            pongball.ball.centerx -= 0
-            pongball.ball.move_ip(-15,-10)"""
+pygame.init()
+screen = pygame.display.set_mode((window_width, window_height))
+pygame.display.set_caption('Pokemon Pong')
+pika = Pikachu()
+pika2 = AIPikachu()
+pongball = PongBall(pika, pika2)
 
-        #pongball.collision_pad()
-        #pongball.score()
-        # pongball.random_move()
-        # '''moving Pikachu'''
-        # if 150 < pikachu.pika.bottom < window_height:
-        #     if key[pygame.K_DOWN]:
-        #         pikachu.pika.centery += 15
-        #     elif key[pygame.K_UP]:
-        #         pikachu.pika.centery -= 15
-        # elif pikachu.pika.bottom >= window_height:
-        #     pikachu.pika.centery -= 15
-        # elif pikachu.pika.bottom <= 150:
-        #     pikachu.pika.centery += 15
-        '''image stuff'''
-        background = pygame.image.load('grass.png')
-        background = pygame.transform.smoothscale(background, (window_width, window_height))
-        screen.blit(background, (0,0))
-        screen.blit(pika.image, pika.rect)
-        screen.blit(pongball.image, pongball.rect)
-        screen.blit(pika2.image, pika2.rect)
-        pygame.display.flip()
-        pygame.display.update()
-        '''quit event'''
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
+running = True
+while running == True:
+    pika.move_pika(pygame.key.get_pressed())
+    pika2.move_AI(pygame.key.get_pressed())
+    pongball.set_ball()
+    pongball.collision_pikachu()
+    pongball.collision_pikachu2()
+    pongball.collision_wall()
 
-if __name__ == "__main__":
-    main()
+    '''image stuff'''
+    background = pygame.image.load('grass.png')
+    background = pygame.transform.smoothscale(background, (window_width, window_height))
+    screen.blit(background, (0,0))
+    screen.blit(pika.image, pika.rect)
+    screen.blit(pongball.image, pongball.rect)
+    screen.blit(pika2.image, pika2.rect)
+    pygame.display.flip()
+    pygame.display.update()
+    '''quit event'''
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            pygame.quit()
