@@ -28,9 +28,9 @@ class Pikachu(pygame.sprite.Sprite): #making the Pikachu act as a Paddle
                 self.rect.centery -= 25 #moves pikachu up
 
         elif self.rect.bottom >= window_height: #if pikachu hits the bottom 
-            self.rect.centery -= 15
+            self.rect.centery -= 25
         elif self.rect.bottom <= 150: #if pikachu hits the top 
-            self.rect.centery += 15
+            self.rect.centery += 25
 
 class PongBall(pygame.sprite.Sprite):
     def __init__(self, pika_one, pika_two):
@@ -51,16 +51,6 @@ class PongBall(pygame.sprite.Sprite):
     def set_ball(self): #ball action at beginning of game
         if self.ball.left > 0 or self.ball.right < window_width:
             self.ball.move_ip(self.dx, self.dy)
-
-    def collision_pikachu(self): #if ball hits player 1 then bounce ball
-        if self.pika.rect.right >= self.ball.left:
-            if (self.ball.bottom >= self.pika.rect.top and self.ball.bottom <= self.pika.rect.bottom) or  (self.ball.top <= self.pika.rect.top and self.ball.top >= self.pika.rect.bottom):
-                self.dx = -1*self.dx
-
-    def collision_pikachu2(self): #if ball hits player 2 then bounce ball
-        if self.ball.right >= self.pika2.rect.left:
-            if (self.ball.bottom >= self.pika2.rect.top and self.ball.bottom <= self.pika2.rect.bottom) or  (self.ball.top <= self.pika2.rect.top and self.ball.top >= self.pika2.rect.bottom):
-                self.dx = -1*self.dx
 
     def collision_wall(self):
          #instances if ball hits a wall
@@ -150,9 +140,10 @@ while running == True:
     pika2.move_pika2(pygame.key.get_pressed())
     #calling functions
     pongball.set_ball()
-    pongball.collision_pikachu()
-    pongball.collision_pikachu2()
     pongball.collision_wall()
+    if pygame.sprite.collide_rect(pongball, pika) or pygame.sprite.collide_rect(pongball, pika2):
+        pongball.dx = -1*pongball.dx
+        pongball.dy = random.randint(0,20)
     '''text'''
     text = pygame.font.SysFont("Arial", 60)
     win_text = pygame.font.SysFont("Arial", 100)
