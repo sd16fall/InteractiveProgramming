@@ -1,3 +1,4 @@
+'''Pokemon Pong by Alyssa Wu & Sandy Ta'''
 import pygame
 import sys
 import random
