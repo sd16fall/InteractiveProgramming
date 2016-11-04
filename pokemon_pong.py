@@ -41,13 +41,13 @@ class PongBall(pygame.sprite.Sprite):
         self.pika = pika_one
         self.pika2 = pika_two
         self.image = pygame.image.load('pokeball.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (100,80)) #code to resize the ball image
+        self.image = pygame.transform.scale(self.image, (100,80)) 
         self.rect = self.image.get_rect() 
         self.ball = self.rect #making ball a rectangle to get rect attributes
         self.ball.centery = window_height / 2.0 #ball starts at center of screen
         self.ball.centerx = window_width / 2.0
-        self.dx = -22
-        self.dy = 5
+        self.dx = -22 #setting ball speed
+        self.dy = 5 #setting ball direction
 
     def set_ball(self): #ball action at beginning of game
         if self.ball.left > 0 or self.ball.right < window_width:
@@ -55,11 +55,11 @@ class PongBall(pygame.sprite.Sprite):
 
     def collision_wall(self):
          #instances if ball hits a wall
-        if self.ball.top <= 0:
+        if self.ball.top <= 0: #hits top and changes direction
             self.dy = -1*self.dy
-        elif self.ball.bottom >= window_height:
+        elif self.ball.bottom >= window_height: #hits bottom and changes direction
             self.dy = -1*self.dy
-        elif self.ball.right >= window_width:
+        elif self.ball.right >= window_width: #resets ball to center if it hits the left or right sides
             p1_score()
             self.ball.center = (600,600)
             self.dx = -1*self.dx
@@ -72,7 +72,7 @@ class Pikachu2(Pikachu):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('pikachu.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (150,200)) #code to resize pikachu 2
+        self.image = pygame.transform.scale(self.image, (150,200)) 
         self.rect = self.image.get_rect() 
         self.pikac = self.rect
         self.pikac.centery = window_height / 2.0 #setting starting location
@@ -101,9 +101,9 @@ def p2_score():
     p2_wins += 1
     win_game()
 
-def win_game():
+def win_game(): #displays win message and resets score and player positions if someone reaches the score 5
     global p1_wins, p2_wins
-    if p1_wins == 5:
+    if p1_wins == 5: 
         p1_wins = 0
         p2_wins = 0
         p1_wins_text = win_text.render('Player 1 wins!', 1, (255,255,255))
@@ -122,8 +122,8 @@ def win_game():
         time.sleep(2)
         reset_game()
 
-def reset_game():
-    global pika, pika2 #resets pikachu locations when someone wins the game
+def reset_game(): #resets pikachu locations when someone wins the game
+    global pika, pika2 
     pika.pikac.centery = window_height / 2.0
     pika2.pikac.centery = window_height / 2.0
 
@@ -139,9 +139,9 @@ running = True
 while running == True:
     pika.move_pika(pygame.key.get_pressed())
     pika2.move_pika2(pygame.key.get_pressed())
-    #calling functions
     pongball.set_ball()
     pongball.collision_wall()
+    #makes the ball bounce in another direction if it collides with a pikachu
     if pygame.sprite.collide_rect(pongball, pika) or pygame.sprite.collide_rect(pongball, pika2):
         pongball.dx = -1*pongball.dx
         pongball.dy = random.randint(0,20)
