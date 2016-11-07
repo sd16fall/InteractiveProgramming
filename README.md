@@ -13,6 +13,8 @@ New in Version 2.0: Supports up to two players!
 
 The objective of the game is to collaboratively cancel all the bricks spawned on the screen.
 
+![alt tag](https://raw.githubusercontent.com/rerafyaw/InteractiveProgramming/master/gameplay.png)
+
 If any player fails to intercept the ball before it touches the edge of the screen, the game will end, and the player loses.
 
 # Game Control
