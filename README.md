@@ -1,4 +1,4 @@
-# UltimateBrick
+# Ultimate Bricks - a mini-game!
 
 #  Game Overview
 
