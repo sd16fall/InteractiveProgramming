@@ -15,8 +15,8 @@ yy2_position=-150
 gamerun = True
 clock = pygame.time.Clock()
 pygame.mixer.music.load("BGM.mp3")
+pygame.mixer.music.play(-1)
 while gamerun == True:
-    pygame.mixer.music.play(-1)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gamerun = False
