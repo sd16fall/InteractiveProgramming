@@ -24,10 +24,10 @@ The only thing that players can control is the movement of the bars.
 Each player has his/her own bar and at the beginning - the bar for player 1 will be on the lower left corner of the screen, and the bar for player 2 will be on the upper right corner of the screen.
 
 Controls:
-- Player 1:
-    Left - Left arrow key
-    Right - Right arrow key
+Player 1:
+- Left - Left arrow key
+- Right - Right arrow key
 
-- Player 2:
-    Left - Q
-    Right - E
+Player 2:
+- Left - Q
+- Right - E
