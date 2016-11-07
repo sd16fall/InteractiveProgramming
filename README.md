@@ -4,6 +4,8 @@
 
 This is a game which supports two players to cooperate and the goal is to cancel all the bricks on the screen.
 
+![alt tag](https://raw.githubusercontent.com/rerafyaw/InteractiveProgramming/master/splash.png)
+
 # Game Objective
 
 The goal for the game is to cancel all the bricks on the screen. If one of the player fail to catch the ball and let the ball touched the edge of the screen. Game will fail.
