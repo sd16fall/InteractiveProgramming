@@ -1,9 +1,9 @@
-""" Version 2.1 Ultimate Brick Stable
+""" Version 2.1a Ultimate Brick (stable)
 Anderson Ang Wei Jian and Qingyun Liu
 
 Uses trivial graphical tiles to create a game environment -
 the objective is to spawn an environment with tiles and sprites using non-trivial
-code (without interaction elements)
+code (with interaction elements)
 
 Changelog: (Total hours: 32 hours minimum, 40 hours maximum)
 
