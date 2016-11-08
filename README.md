@@ -32,3 +32,10 @@ Player 1:
 Player 2:
 - Left - Q
 - Right - E
+
+# Restarting the Game
+Hitting "R" when the game is over will allow both players to restart within the game.
+
+![alt tag](https://raw.githubusercontent.com/rerafyaw/InteractiveProgramming/master/restart.png)
+
+Enjoy!
