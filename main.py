@@ -168,7 +168,7 @@ def main():
 
 	# models
 	# level models:
-	ground = Ground(x=0,width=600)
+	ground = Ground(x=0,width=700)
 	#5 different platforms
 	platform1 = Platform(10,10)
 	platform2 = Platform(800,10)
