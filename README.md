@@ -5,7 +5,17 @@
 ![alt tag](https://raw.githubusercontent.com/rerafyaw/InteractiveProgramming/master/splash.png)
 
 
-Word! Two players to cooperate to cancel all the bricks on the screen, in a classic spin on the original brick breaker.
+Word! Two players cooperate to cancel all the bricks on the screen, in a classic spin on the original brick breaker.
+
+# Installation
+Download the latest version (v2.1a) of the program - this game runs on several dependencies, based on the following libraries:
+- PyGame
+- Python 2.7 (with math and cmath support)
+
+You can install the `pygame` library by executing the following command:
+```
+$ sudo apt-get install python-pygame
+```
 
 # Game Objective
 
@@ -39,3 +49,5 @@ Hitting "R" when the game is over will allow both players to restart within the 
 ![alt tag](https://raw.githubusercontent.com/rerafyaw/InteractiveProgramming/master/restart.png)
 
 Enjoy!
+
+[credits: rerafyaw (a.seed), lqyeric94 (qyliu)]
