@@ -206,7 +206,7 @@ def main():
 
 		if player.hit_ground(ground):
 			player.dy = 0
-			#player.y = ground.y - player.height
+			player.y = ground.y - player.height
 
 		if not player.on_ground(ground) and player.dy==0:
 			player.dy = .001
