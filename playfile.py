@@ -47,7 +47,13 @@ class Player(object):
 		return self.x < 130
 
 	def hit_ground(self,ground):
-		return (self.y + self.height) > ground.y
+		return (self.y + self.height) > ground.y and self.x < (ground.x+ground.width) and self.x > ground.x
+
+	def fall_to_death(self):
+		return self.y > 480
+
+	def on_ground(self,ground):
+		return self.x < (ground.x+ground.width) and self.x > ground.x
 
 class PainTrain(object):
 	def __init__(self,x=0,y=0,width=200,height=200,constdx=.05,dx=0,shiftdx=-1):
@@ -151,7 +157,7 @@ def main():
 
 	# models
 	# level models:
-	ground = Ground()
+	ground = Ground(width=700) #x=0?
 	platform1 = Platform(10,10)
 	platform2 = Platform(800,10)
 	platform3 = Platform(1600,10)
@@ -159,7 +165,7 @@ def main():
 	platform5 = Platform(2400,10)
 	# player/NPC models:
 	player = Player(300,300)
-	train = PainTrain(0,300)
+	train = PainTrain(0,300,constdx=0)
 	#models = [train, player, ground, platform1]
 	controlled_models = [player,train,ground,platform1,platform2,platform3,platform4,platform5]
 	level_models = [ground,platform1]
@@ -185,7 +191,7 @@ def main():
 
 	while running == True:
 		# Pretty awful way to slow player down.
-		counter += 1 # adjust this if it's running to slow. Sorry.
+		counter += 1 # adjust this if it's running too slow. Sorry.
 		if counter%5 == 0:
 			controller.handle_event()
 
@@ -193,14 +199,17 @@ def main():
 			if event.type == pygame.QUIT:
 				running = False
 
-		if player.train_wreck(train):
+		if player.train_wreck(train) or player.fall_to_death():
 			train.constdx = 0
 			player.dx = 0
 			running = False
 
 		if player.hit_ground(ground):
 			player.dy = 0
-			player.y = ground.y - player.height
+			#player.y = ground.y - player.height
+
+		if not player.on_ground(ground) and player.dy==0:
+			player.dy = .001
 
 
 		# keep train moving

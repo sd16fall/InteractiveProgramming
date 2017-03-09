@@ -159,7 +159,7 @@ class Controller(object):
 					model.x += model.shiftdx
 				else:
 					model.x += model.dx
-		if keys[pygame.K_UP] and player.dy == 0:
+		if keys[pygame.K_UP]:
 			player.dy = player.jumpdy
 
 def main():
