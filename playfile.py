@@ -157,7 +157,7 @@ def main():
 
 	# models
 	# level models:
-	ground = Ground(width=700) #x=0?
+	ground = Ground(width=1500) #x=0?
 	platform1 = Platform(10,10)
 	platform2 = Platform(800,10)
 	platform3 = Platform(1600,10)
@@ -165,7 +165,7 @@ def main():
 	platform5 = Platform(2400,10)
 	# player/NPC models:
 	player = Player(300,300)
-	train = PainTrain(0,300,constdx=0)
+	train = PainTrain(0,300)
 	#models = [train, player, ground, platform1]
 	controlled_models = [player,train,ground,platform1,platform2,platform3,platform4,platform5]
 	level_models = [ground,platform1]
