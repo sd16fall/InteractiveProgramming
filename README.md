@@ -53,8 +53,51 @@ The classes you will find here are
 - ObstacleView
 
 ### Controller Classes
-### Main Function
+This is actually one class called the Controller class. It has an initial function to define it, and a handle_event function. This class interacts with the main function, which passes it an event. The handle_event function then determines which event it is (i.e., which key has been pressed), and says what to do in that case. Here's the class:
 
-## How do I play?
+```
+class Controller(object):
+	def __init__(self,models):
+		self.models = models
+		self.player = models[0] # make sure this aligns with controlled_models in main
+
+	def handle_event(self):
+		# time passed isn't actually time based... based on while loop efficiency
+		player = self.player
+		models = self.models
+		keys = pygame.key.get_pressed() # checking pressed keys
+		for model in models:
+			if keys[pygame.K_LEFT]:
+				if player.go_back():
+					model.x -= model.shiftdx
+				else:
+					model.x -= model.dx
+			if keys[pygame.K_RIGHT]:
+				if player.shift_world():
+					model.x += model.shiftdx
+				else:
+					model.x += model.dx
+
+		if keys[pygame.K_UP] and player.dy == 0:
+			player.dy = player.jumpdy
+```
+
+The class you will find here is 
+- Controller
+
+### Main Function
+Now this function is the thing that pulls the whole game together, and thus, it is probably the most confusing. Here's what it does:
+
+- Initializes pygame and the screen
+- defines objects and their views and puts them in appropriate arrays
+- defines controller
+- Runs main while loop, which updates object positions, draws the corresponding views, and checks for events. This stops running if the player dies or closes the window.
+- If the player dies, it runs another while loop which displays the losing screen.
+
+And that's it!
+
+## So how do I play?
 ## Other questions
+####It's running to slow, what can I do to fix it?
+####Why do I always lose?
 ## License/Attribution
