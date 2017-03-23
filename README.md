@@ -10,7 +10,8 @@ The code is split into three collections of classes: The Model classes, the View
 ### Model Classes
 These contain the definition of the models of each type of object in the game, and their interactions with other objects or events. Each class defines things such as an object's postion, height, width, and distance traveled per loop. Here's an example of a model class:
 
-```class PainTrain(object):
+```
+class PainTrain(object):
 	def __init__(self,x=0,y=0,width=200,height=200,constdx=.05,dx=0,shiftdx=-1):
 		# places train centered above coordinate given
 		self.x = x
