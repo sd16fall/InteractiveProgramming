@@ -13,7 +13,7 @@ SLATEGRAY = (112,128,144)
 """Model classes"""
 class Player(object):
 	def __init__(self,x=0,y=0,width=50,height=50,dx=1,dy=0,shiftdx=0,jumpdy=-.75):
-		# places player centered above the coordinate given
+		# places player below and to the right of the coordinate given
 		self.x = x
 		self.y = y-height
 		self.width = width
@@ -32,14 +32,14 @@ class Player(object):
 	def go_back(self):
 		return self.x < 130
 
-	def hit_ground(self,ground):
-		return (self.y + self.height) > ground.y and self.x < (ground.x+ground.width) and self.x > ground.x
+	def hit_platform(self,platform):
+		return (self.y + self.height) > platform.y and (self.y + self.height) < (platform.y+platform.height) and self.x < (platform.x+platform.width) and (self.x+self.width) > platform.x
 
 	def fall_to_death(self):
 		return self.y > 480
 
-	def on_ground(self,ground):
-		return self.x < (ground.x+ground.width) and self.x > ground.x
+	def on_platform(self,platform):
+		return self.x < (platform.x+platform.width) and (self.x+self.width) > platform.x and (self.y+self.height)==platform.y
 
 class PainTrain(object):
 	def __init__(self,x=0,y=0,width=200,height=200,constdx=.05,dx=0,shiftdx=-1):
@@ -115,7 +115,7 @@ class ObstacleView(object):
 class Controller(object):
 	def __init__(self,models):
 		self.models = models
-		self.player = models[0] # make sure this aligns with controlled_models in main
+		self.player = models[0] # make sure this aligns with all_models in main
 
 	def handle_event(self):
 		# time passed isn't actually time based... based on while loop efficiency
@@ -134,7 +134,7 @@ class Controller(object):
 				else:
 					model.x += model.dx
 
-		if keys[pygame.K_UP] and player.dy == 0:
+		if keys[pygame.K_UP] and player.dy >= 0:
 			player.dy = player.jumpdy
 
 def main():
@@ -146,9 +146,10 @@ def main():
 
 	# models
 	# level models:
-	ground = Ground(width=1500) #x=0?
-	platform1 = Platform(10,10)
-	platform2 = Platform(800,10)
+	ground1 = Ground(width=1500, x=0) #x=0?
+	ground2 = Ground(width=1500, x=1600)
+	platform1 = Platform(800,10)
+	platform2 = Platform(1200,200)
 	platform3 = Platform(1600,10)
 	platform4 = Platform(2000,10)
 	platform5 = Platform(2400,10)
@@ -156,14 +157,15 @@ def main():
 	player = Player(300,300)
 	train = PainTrain(0,300)
 	#models = [train, player, ground, platform1]
-	controlled_models = [player,train,ground,platform1,platform2,platform3,platform4,platform5]
-	level_models = [ground,platform1]
+	all_models = [player,train,ground1,ground2,platform1,platform2,platform3,platform4,platform5]
+	collision_models = [ground1,ground2,platform1,platform2,platform3,platform4,platform5]
 
 	# views
 	views = []
 	views.append(PlayerView(player))
 	views.append(PainTrainView(train))
-	views.append(GroundView(ground))
+	views.append(GroundView(ground1))
+	views.append(GroundView(ground2))
 	views.append(ObstacleView(platform1))
 	views.append(ObstacleView(platform2))
 	views.append(ObstacleView(platform3))
@@ -171,16 +173,17 @@ def main():
 	views.append(ObstacleView(platform5))
 
 	# controller
-	controller = Controller(controlled_models)
+	controller = Controller(all_models)
 	running = True
 	counter = 0
 
 	# variable to make speed lower
-	delta_speed = .00005 # good one is .00005
+	delta_speed = 0 # good one is .00005
+	train.constdx = 0
 
 	while running == True:
 		counter += 1
-		if counter%5 == 0: # adjust this if it's running too slow. A little jank, sorry.
+		if counter%5 == 0: # adjust if it's running too slow. A little jank, sorry.
 			controller.handle_event()
 
 		for event in pygame.event.get():
@@ -192,12 +195,9 @@ def main():
 			player.dx = 0
 			running = False
 
-		if player.hit_ground(ground):
-			player.dy = 0
-			player.y = ground.y - player.height
-
-		if not player.on_ground(ground) and player.dy==0:
-			player.dy = .001
+		#for ground in ground_models:
+		#	if not player.hit_platform(ground) and player.dy==0:
+		#		player.dy = .001
 
 
 		# keep train moving
@@ -212,8 +212,16 @@ def main():
 		if player.jumpdy < -.05:
 			player.jumpdy += delta_speed
 
+		#handle collisions
+		for model in collision_models:
+			if player.hit_platform(model):
+				player.dy = 0
+				player.y = model.y - player.height
+			if not player.on_platform(model) and player.dy==0:
+				player.dy = .001
+
 		# decrease speed of player (and all things relative to it)
-		for model in controlled_models:
+		for model in all_models:
 			# good delta speed is .00005
 			if model.dx > .01:
 				model.dx -= delta_speed
