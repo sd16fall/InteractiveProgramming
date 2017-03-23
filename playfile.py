@@ -1,21 +1,7 @@
-"""main.py
-
-objects: screen, player, follower
-
-TODO:
-- train constant speed
-- player slows down
-- lose on collision
-- flat level
-
-DONE:
-- simple objects for player sprite"""
+"""Pain Train the Video Game, by Charlie Weiss and Diego Garcia"""
 
 import pygame
 import math
-
-# Images
-gameover = pygame.image.load('gameover1.bmp')
 
 # Colors
 BLACK = (0,0,0)
@@ -47,7 +33,13 @@ class Player(object):
 		return self.x < 130
 
 	def hit_ground(self,ground):
-		return (self.y + self.height) > ground.y
+		return (self.y + self.height) > ground.y and self.x < (ground.x+ground.width) and self.x > ground.x
+
+	def fall_to_death(self):
+		return self.y > 480
+
+	def on_ground(self,ground):
+		return self.x < (ground.x+ground.width) and self.x > ground.x
 
 class PainTrain(object):
 	def __init__(self,x=0,y=0,width=200,height=200,constdx=.05,dx=0,shiftdx=-1):
@@ -149,9 +141,12 @@ def main():
 	pygame.init()
 	screen = pygame.display.set_mode((640,480))
 
+	# Images
+	gameover = pygame.image.load('gameover1.bmp').convert()
+
 	# models
 	# level models:
-	ground = Ground()
+	ground = Ground(width=1500) #x=0?
 	platform1 = Platform(10,10)
 	platform2 = Platform(800,10)
 	platform3 = Platform(1600,10)
@@ -175,7 +170,7 @@ def main():
 	views.append(ObstacleView(platform4))
 	views.append(ObstacleView(platform5))
 
-	# TODO: Add controller
+	# controller
 	controller = Controller(controlled_models)
 	running = True
 	counter = 0
@@ -184,16 +179,15 @@ def main():
 	delta_speed = .00005 # good one is .00005
 
 	while running == True:
-		# Pretty awful way to slow player down.
-		counter += 1 # adjust this if it's running to slow. Sorry.
-		if counter%5 == 0:
+		counter += 1
+		if counter%5 == 0: # adjust this if it's running too slow. A little jank, sorry.
 			controller.handle_event()
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				running = False
 
-		if player.train_wreck(train):
+		if player.train_wreck(train) or player.fall_to_death():
 			train.constdx = 0
 			player.dx = 0
 			running = False
@@ -201,6 +195,9 @@ def main():
 		if player.hit_ground(ground):
 			player.dy = 0
 			player.y = ground.y - player.height
+
+		if not player.on_ground(ground) and player.dy==0:
+			player.dy = .001
 
 
 		# keep train moving
