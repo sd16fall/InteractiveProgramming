@@ -1,4 +1,10 @@
 """Pain Train the Video Game, by Charlie Weiss and Diego Garcia"""
+"""TODO:
+- Obstacle placement
+- Graphic design
+- Interactive Start screen
+- Interactive End screen
+- Pain Train name"""
 
 import pygame
 import math
@@ -121,6 +127,7 @@ class Controller(object):
 		# time passed isn't actually time based... based on while loop efficiency
 		player = self.player
 		models = self.models
+		jump = False
 		keys = pygame.key.get_pressed() # checking pressed keys
 		for model in models:
 			if keys[pygame.K_LEFT]:
@@ -133,8 +140,10 @@ class Controller(object):
 					model.x += model.shiftdx
 				else:
 					model.x += model.dx
+			if model.y and player.on_platform(model):
+				jump = True
 
-		if keys[pygame.K_UP] and player.dy >= 0:
+		if keys[pygame.K_UP] and jump==True:
 			player.dy = player.jumpdy
 
 def main():
@@ -147,11 +156,11 @@ def main():
 	# models
 	# level models:
 	ground1 = Ground(width=1500, x=0) #x=0?
-	ground2 = Ground(width=1500, x=1600)
+	ground2 = Ground(width=1500, x=1800)
 	platform1 = Platform(800,10)
 	platform2 = Platform(1200,200)
 	platform3 = Platform(1600,10)
-	platform4 = Platform(2000,10)
+	platform4 = Platform(2200,10)
 	platform5 = Platform(2400,10)
 	# player/NPC models:
 	player = Player(300,300)
@@ -178,8 +187,7 @@ def main():
 	counter = 0
 
 	# variable to make speed lower
-	delta_speed = 0 # good one is .00005
-	train.constdx = 0
+	delta_speed = .00005 # good one is .00005
 
 	while running == True:
 		counter += 1
@@ -214,9 +222,12 @@ def main():
 
 		#handle collisions
 		for model in collision_models:
-			if player.hit_platform(model):
+			if player.hit_platform(model) and player.dy>0:
 				player.dy = 0
 				player.y = model.y - player.height
+			elif player.hit_platform(model) and player.dy<0:
+				player.y = model.y+model.height
+				player.dy = .001
 			if not player.on_platform(model) and player.dy==0:
 				player.dy = .001
 
