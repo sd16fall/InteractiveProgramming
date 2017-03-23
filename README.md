@@ -1,6 +1,12 @@
-# InteractiveProgramming
+# "Pain Train" the Video Game
+### by Charlie Weiss and Diego Garcia
 
-This is the base repo for the interactive programming project for Software Design, Fall 2016 at Olin College.
+## What is this?
+This is a video game created using Python's pygame library and an MVP (model-viewer-player) framework. It is a platform game with a player, a chaser, and some obstacles. The player loses by either being overtaken by the chaser, or by falling to their death.
+
+## How does it work?
 
 
-To run the game, run the file main.py in your terminal.
+## How do I play?
+## Other questions
+## License/Attribution
