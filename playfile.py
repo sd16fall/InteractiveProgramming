@@ -1,15 +1,4 @@
-"""main.py
-
-objects: screen, player, follower
-
-TODO:
-- train constant speed
-- player slows down
-- lose on collision
-- flat level
-
-DONE:
-- simple objects for player sprite"""
+"""Pain Train the Video Game, by Charlie Weiss and Diego Garcia"""
 
 import pygame
 import math
@@ -190,9 +179,8 @@ def main():
 	delta_speed = .00005 # good one is .00005
 
 	while running == True:
-		# Pretty awful way to slow player down.
-		counter += 1 # adjust this if it's running too slow. A little jank, sorry.
-		if counter%5 == 0:
+		counter += 1
+		if counter%5 == 0: # adjust this if it's running too slow. A little jank, sorry.
 			controller.handle_event()
 
 		for event in pygame.event.get():

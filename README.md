@@ -109,10 +109,30 @@ python playfile.py
 ```
 And look out, because now you're playing!
 
-If you run into some issues installing Pygame or even Python, [this is a nice guide to refer to](https://www.pygame.org/wiki/GettingStarted)
+If you run into some issues installing Pygame or even Python, [this is a nice guide to refer to](https://www.pygame.org/wiki/GettingStarted).
 
 ## Other questions
 
 #### It's running too slow, what can I do to fix it?
+Try lowering the mod on the counter in the first if statement of the main while loop. For example, try turning this:
+
+```
+while running == True:
+		counter += 1
+		if counter%5 == 0: # adjust this
+			controller.handle_event()
+```
+into this:
+```
+while running == True:
+		counter += 1
+		if counter%2 == 0: # adjust this
+			controller.handle_event()
+```
+Beyond that, this really isn't the most efficient thing in the world right now... sorry about that.
+
 #### Why do I always lose?
-## License/Attribution
+Life isn't fair, buddy. Neither is this.
+
+## License
+Hmm.
