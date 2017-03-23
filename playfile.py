@@ -14,9 +14,6 @@ DONE:
 import pygame
 import math
 
-# Images
-gameover = pygame.image.load('gameover1.bmp')
-
 # Colors
 BLACK = (0,0,0)
 WHITE = (255,255,255)
@@ -155,6 +152,9 @@ def main():
 	pygame.init()
 	screen = pygame.display.set_mode((640,480))
 
+	# Images
+	gameover = pygame.image.load('gameover1.bmp').convert()
+
 	# models
 	# level models:
 	ground = Ground(width=1500) #x=0?
@@ -181,7 +181,7 @@ def main():
 	views.append(ObstacleView(platform4))
 	views.append(ObstacleView(platform5))
 
-	# TODO: Add controller
+	# controller
 	controller = Controller(controlled_models)
 	running = True
 	counter = 0
@@ -191,7 +191,7 @@ def main():
 
 	while running == True:
 		# Pretty awful way to slow player down.
-		counter += 1 # adjust this if it's running too slow. Sorry.
+		counter += 1 # adjust this if it's running too slow. A little jank, sorry.
 		if counter%5 == 0:
 			controller.handle_event()
 

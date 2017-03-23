@@ -97,7 +97,22 @@ Now this function is the thing that pulls the whole game together, and thus, it 
 And that's it!
 
 ## So how do I play?
+Assuming you're working in Linux, it's really as simple as installing Pygame, downloading playfile.py, and calling it in Python using your terminal. This is what this will look like in your command window:
+
+First,
+```
+pip install pygame
+```
+Next,
+```
+python playfile.py
+```
+And look out, because now you're playing!
+
+If you run into some issues installing Pygame or even Python, [this is a nice guide to refer to](https://www.pygame.org/wiki/GettingStarted)
+
 ## Other questions
-####It's running to slow, what can I do to fix it?
-####Why do I always lose?
+
+#### It's running too slow, what can I do to fix it?
+#### Why do I always lose?
 ## License/Attribution
