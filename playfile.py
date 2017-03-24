@@ -52,7 +52,7 @@ class Player(object):
 		return ((A>a and A<b) or (B>a and B<b)) and ((C>c and C<d) or (D>c and D<d))
 
 	def fall_to_death(self):
-		return self.y > 480
+			return self.y > 480
 
 	def on_platform(self,platform):
 		return self.x < (platform.x+platform.width) and (self.x+self.width) > platform.x and (self.y+self.height)==platform.y
@@ -173,7 +173,7 @@ def main():
 	ground1 = Ground(width=1500, x=0) #x=0?
 	ground2 = Ground(width=1500, x=1800)
 	platform1 = Platform(800,10)
-	platform2 = Platform(1200,200)
+	platform2 = Platform(1200,200,height=300)
 	platform3 = Platform(1600,10)
 	platform4 = Platform(2200,10)
 	platform5 = Platform(2400,10)
@@ -189,6 +189,7 @@ def main():
 	new_player_pic = pygame.transform.scale(player_pic, (player.width,player.height))
 	new_ground_pic = pygame.transform.scale(ground_pic, (ground1.width,ground1.height))
 	new_platform_pic = pygame.transform.scale(platform_pic, (platform1.width,platform1.height))
+	t_platform_pic = pygame.transform.scale(platform_pic, (platform2.width,platform2.height))
 
 	# views
 	views = []
@@ -196,7 +197,7 @@ def main():
 	views.append(GroundView(ground1,new_ground_pic))
 	views.append(GroundView(ground2,new_ground_pic))
 	views.append(ObstacleView(platform1,new_platform_pic))
-	views.append(ObstacleView(platform2,new_platform_pic))
+	views.append(ObstacleView(platform2,t_platform_pic))
 	views.append(ObstacleView(platform3,new_platform_pic))
 	views.append(ObstacleView(platform4,new_platform_pic))
 	views.append(ObstacleView(platform5,new_platform_pic))
@@ -210,6 +211,7 @@ def main():
 	# variable to make speed lower
 	delta_speed = 0 # good one is .00005
 	train.constdx = 0
+	quit_button = False
 
 	while running == True:
 		counter += 1
@@ -218,17 +220,18 @@ def main():
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
+				quit_button = True
 				running = False
 
 		if player.train_wreck(train) or player.fall_to_death():
+			if player.train_wreck(train):
+				print "wreck"
+			if player.fall_to_death:
+				print "fall"
+			print player.y
 			train.constdx = 0
 			player.dx = 0
 			running = False
-
-		#for ground in ground_models:
-		#	if not player.hit_platform(ground) and player.dy==0:
-		#		player.dy = .001
-
 
 		# keep train moving
 		train.step()
@@ -244,12 +247,19 @@ def main():
 
 		#handle collisions
 		for model in collision_models:
-			if player.hit_platform(model) and player.dy>0:
-				player.dy = 0
-				player.y = model.y - player.height
-			elif player.hit_platform(model) and player.dy<0:
-				player.y = model.y+model.height
-				player.dy = .001
+			if player.hit_platform(model):
+				if player.dy>0:
+					if player.y+player.height<model.y+5:
+						player.dy = 0
+						player.y = model.y - player.height
+					else:
+						if player.x<model.x+model.width/2:
+							player.x = model.x-player.width
+						else:
+							player.x = model.x+model.width
+				else:
+					player.y = model.y-player.height
+					player.dy = .001
 			if not player.on_platform(model) and player.dy==0:
 				player.dy = .001
 
@@ -272,7 +282,7 @@ def main():
 		pygame.display.update()
 
 	running = True
-	while running == True:
+	while running == True and quit_button==False:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				running = False
