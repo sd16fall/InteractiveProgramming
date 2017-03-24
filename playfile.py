@@ -82,7 +82,7 @@ class Ground(object):
 		self.shiftdx = shiftdx
 
 class Platform(object):
-	def __init__(self, x=0,y=0,width = 100, height = 20, dx=0, shiftdx=-1):
+	def __init__(self, x=0,y=0,width = 150, height = 20, dx=0, shiftdx=-1):
 		self.x = x
 		self.y = y
 		self.width = width
@@ -170,34 +170,42 @@ def main():
 
 	# models
 	# level models:
-	ground1 = Ground(width=1500, x=0) #x=0?
-	ground2 = Ground(width=1500, x=1800)
-	platform1 = Platform(800,10)
-	platform2 = Platform(1200,200,height=300)
-	platform3 = Platform(1600,10)
-	platform4 = Platform(2200,10)
-	platform5 = Platform(2400,10)
+	# design for level 6000 wide
+	ground1 = Ground(x=0,width=650)
+	ground2 = Ground(x=850,width=1100) #jump dist: 200
+	platform1 = Platform(x=1400,y=200)
+	platform2 = Platform(x=1700,y=100)
+	ground3 = Ground(x=2100,width=1100) #jump dist: 150
+	ground4 = Ground(x=3350,width=1100) #jump dist: 150
+	ground5 = Ground(x=4600,width=1100) #jump dist: 150
+	platform3 = Platform(3200,10)
+	platform4 = Platform(3300,10)
+	platform5 = Platform(3400,10)
 	# player/NPC models:
 	player = Player(300,300)
 	train = PainTrain(0,300)
 	#models = [train, player, ground, platform1]
-	all_models = [player,train,ground1,ground2,platform1,platform2,platform3,platform4,platform5]
-	collision_models = [ground1,ground2,platform1,platform2,platform3,platform4,platform5]
+	all_models = [player,train,ground1,ground2,platform1,platform2,ground3,ground4,ground5,platform3,platform4,platform5]
+	collision_models = [ground1,ground2,platform1,platform2,ground3,ground4,ground5,platform3,platform4,platform5]
 
 	#resize images for views
 	new_train_pic = pygame.transform.scale(train_pic, (train.width,train.height))
 	new_player_pic = pygame.transform.scale(player_pic, (player.width,player.height))
-	new_ground_pic = pygame.transform.scale(ground_pic, (ground1.width,ground1.height))
+	a_ground_pic = pygame.transform.scale(ground_pic, (ground1.width,ground1.height))
+	b_ground_pic = pygame.transform.scale(ground_pic, (ground2.width,ground2.height))
 	new_platform_pic = pygame.transform.scale(platform_pic, (platform1.width,platform1.height))
 	t_platform_pic = pygame.transform.scale(platform_pic, (platform2.width,platform2.height))
 
 	# views
 	views = []
 	views.append(PlayerView(player,new_player_pic))
-	views.append(GroundView(ground1,new_ground_pic))
-	views.append(GroundView(ground2,new_ground_pic))
+	views.append(GroundView(ground1,a_ground_pic))
+	views.append(GroundView(ground2,b_ground_pic))
 	views.append(ObstacleView(platform1,new_platform_pic))
 	views.append(ObstacleView(platform2,t_platform_pic))
+	views.append(GroundView(ground3,b_ground_pic))
+	views.append(GroundView(ground4,b_ground_pic))
+	views.append(GroundView(ground5,b_ground_pic))
 	views.append(ObstacleView(platform3,new_platform_pic))
 	views.append(ObstacleView(platform4,new_platform_pic))
 	views.append(ObstacleView(platform5,new_platform_pic))
@@ -209,9 +217,10 @@ def main():
 	counter = 0
 
 	# variable to make speed lower
-	delta_speed = 0 # good one is .00005
-	train.constdx = 0
+	delta_speed = .00001 # good one is .00005
+	train.constdx = .17
 	quit_button = False
+	player.jumpdy=-.65
 
 	while running == True:
 		counter += 1
@@ -224,11 +233,6 @@ def main():
 				running = False
 
 		if player.train_wreck(train) or player.fall_to_death():
-			if player.train_wreck(train):
-				print "wreck"
-			if player.fall_to_death:
-				print "fall"
-			print player.y
 			train.constdx = 0
 			player.dx = 0
 			running = False
@@ -257,8 +261,8 @@ def main():
 							player.x = model.x-player.width
 						else:
 							player.x = model.x+model.width
-				else:
-					player.y = model.y-player.height
+				elif player.dy<0:
+					player.y = model.y+model.height
 					player.dy = .001
 			if not player.on_platform(model) and player.dy==0:
 				player.dy = .001
