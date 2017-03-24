@@ -39,7 +39,17 @@ class Player(object):
 		return self.x < 130
 
 	def hit_platform(self,platform):
-		return (self.y + self.height) > platform.y and (self.y + self.height) < (platform.y+platform.height) and self.x < (platform.x+platform.width) and (self.x+self.width) > platform.x
+		#if the player rectangle dimensions are ABCD
+		#and the platform rectangle is abcd
+		A = self.x
+		B = self.x+self.width
+		C = self.y
+		D = self.y+self.height
+		a = platform.x
+		b = platform.x+platform.width
+		c = platform.y
+		d = platform.y+platform.height
+		return ((A>a and A<b) or (B>a and B<b)) and ((C>c and C<d) or (D>c and D<d))
 
 	def fall_to_death(self):
 		return self.y > 480
@@ -82,40 +92,41 @@ class Platform(object):
 
 """View classes"""
 class PlayerView(object):
-	def __init__(self, model):
+	def __init__(self, model,pic):
 		self.model = model
+		self.pic = pic
 
 	def draw(self, surface):
 		model = self.model
-		# this takes (x,y,width,height)
-		pygame.draw.rect(surface,SLATEGRAY,(model.x,model.y,model.width,model.height))
+		surface.blit(self.pic,(model.x,model.y))
 
 class PainTrainView(object):
-	def __init__(self, model):
+	def __init__(self, model,pic):
 		self.model = model
+		self.pic = pic
 
 	def draw(self, surface):
 		model = self.model
-		# this takes (x,y,width,height)
-		pygame.draw.rect(surface,BLACK,(model.x,model.y,model.width,model.height))
+		surface.blit(self.pic,(model.x,model.y))
 
 class GroundView(object):
-	def __init__(self, model):
+	def __init__(self, model,pic):
 		self.model = model
+		self.pic = pic
 
 	def draw(self, surface):
 		model = self.model
-		# this takes (x,y,width,height)
-		pygame.draw.rect(surface,DIMGRAY,(model.x,model.y,model.width,model.height))
+		surface.blit(self.pic,(model.x,model.y))
 
 class ObstacleView(object):
 	# can be used for any rectangular object
-	def __init__(self,model):
+	def __init__(self,model,pic):
 		self.model = model
+		self.pic = pic
 
 	def draw(self,surface):
 		model = self.model
-		pygame.draw.rect(surface,BLACK,(model.x,model.y,model.width,model.height))
+		surface.blit(self.pic,(model.x,model.y))
 
 """Controller classes"""
 class Controller(object):
@@ -151,7 +162,11 @@ def main():
 	screen = pygame.display.set_mode((640,480))
 
 	# Images
-	gameover = pygame.image.load('gameover1.bmp').convert()
+	gameover_pic = pygame.image.load('images/gameover1.bmp').convert()
+	train_pic = pygame.image.load('images/train.jpg').convert()
+	player_pic = pygame.image.load('images/yoshi.png').convert()
+	ground_pic = pygame.image.load('images/pic01.jpg').convert()
+	platform_pic = pygame.image.load('images/pic02.jpg').convert()
 
 	# models
 	# level models:
@@ -169,17 +184,23 @@ def main():
 	all_models = [player,train,ground1,ground2,platform1,platform2,platform3,platform4,platform5]
 	collision_models = [ground1,ground2,platform1,platform2,platform3,platform4,platform5]
 
+	#resize images for views
+	new_train_pic = pygame.transform.scale(train_pic, (train.width,train.height))
+	new_player_pic = pygame.transform.scale(player_pic, (player.width,player.height))
+	new_ground_pic = pygame.transform.scale(ground_pic, (ground1.width,ground1.height))
+	new_platform_pic = pygame.transform.scale(platform_pic, (platform1.width,platform1.height))
+
 	# views
 	views = []
-	views.append(PlayerView(player))
-	views.append(PainTrainView(train))
-	views.append(GroundView(ground1))
-	views.append(GroundView(ground2))
-	views.append(ObstacleView(platform1))
-	views.append(ObstacleView(platform2))
-	views.append(ObstacleView(platform3))
-	views.append(ObstacleView(platform4))
-	views.append(ObstacleView(platform5))
+	views.append(PlayerView(player,new_player_pic))
+	views.append(GroundView(ground1,new_ground_pic))
+	views.append(GroundView(ground2,new_ground_pic))
+	views.append(ObstacleView(platform1,new_platform_pic))
+	views.append(ObstacleView(platform2,new_platform_pic))
+	views.append(ObstacleView(platform3,new_platform_pic))
+	views.append(ObstacleView(platform4,new_platform_pic))
+	views.append(ObstacleView(platform5,new_platform_pic))
+	views.append(PainTrainView(train,new_train_pic))
 
 	# controller
 	controller = Controller(all_models)
@@ -187,7 +208,8 @@ def main():
 	counter = 0
 
 	# variable to make speed lower
-	delta_speed = .00005 # good one is .00005
+	delta_speed = 0 # good one is .00005
+	train.constdx = 0
 
 	while running == True:
 		counter += 1
@@ -254,7 +276,7 @@ def main():
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				running = False
-		screen.blit(gameover,(60,60))
+		screen.blit(gameover_pic,(60,60))
 		pygame.display.flip()
 
 	pygame.quit()
