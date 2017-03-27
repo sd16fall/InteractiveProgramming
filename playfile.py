@@ -163,10 +163,11 @@ def main():
 
 	# Images
 	gameover_pic = pygame.image.load('images/gameover1.bmp').convert()
-	train_pic = pygame.image.load('images/train.jpg').convert()
-	player_pic = pygame.image.load('images/yoshi.png').convert()
-	ground_pic = pygame.image.load('images/pic01.jpg').convert()
-	platform_pic = pygame.image.load('images/pic02.jpg').convert()
+	train_pic = pygame.image.load('images/train.bmp').convert()
+	player_pic = pygame.image.load('images/player.bmp').convert()
+	playerjump_pic = pygame.image.load('images/player_jump.bmp').convert()
+	ground_pic = pygame.image.load('images/ground2.bmp').convert()
+	platform_pic = pygame.image.load('images/platform.bmp').convert()
 
 	# models
 	# level models:
@@ -177,20 +178,22 @@ def main():
 	platform2 = Platform(x=1700,y=100)
 	ground3 = Ground(x=2100,width=1100) #jump dist: 150
 	ground4 = Ground(x=3350,width=1100) #jump dist: 150
-	ground5 = Ground(x=4600,width=1100) #jump dist: 150
-	platform3 = Platform(3200,10)
-	platform4 = Platform(3300,10)
-	platform5 = Platform(3400,10)
+	ground5 = Ground(x=4450,width=1100) #jump dist: 150
+	ground6 = Ground(x=5550,width=650)
+	platform3 = Platform(3000,200)
+	platform4 = Platform(3500,200)
+	platform5 = Platform(6300,300)
 	# player/NPC models:
-	player = Player(300,300)
-	train = PainTrain(0,300)
+	player = Player(300,300,width=40)
+	train = PainTrain(x=-300,y=300,width=400,height=300)
 	#models = [train, player, ground, platform1]
-	all_models = [player,train,ground1,ground2,platform1,platform2,ground3,ground4,ground5,platform3,platform4,platform5]
-	collision_models = [ground1,ground2,platform1,platform2,ground3,ground4,ground5,platform3,platform4,platform5]
+	all_models = [player,train,ground1,ground2,platform1,platform2,ground3,ground4,ground5,ground6,platform3,platform4,platform5]
+	collision_models = [ground1,ground2,platform1,platform2,ground3,ground4,ground5,ground6,platform3,platform4,platform5]
 
 	#resize images for views
 	new_train_pic = pygame.transform.scale(train_pic, (train.width,train.height))
 	new_player_pic = pygame.transform.scale(player_pic, (player.width,player.height))
+	new_playerjump_pic = pygame.transform.scale(playerjump_pic, (player.width,player.height))
 	a_ground_pic = pygame.transform.scale(ground_pic, (ground1.width,ground1.height))
 	b_ground_pic = pygame.transform.scale(ground_pic, (ground2.width,ground2.height))
 	new_platform_pic = pygame.transform.scale(platform_pic, (platform1.width,platform1.height))
@@ -206,6 +209,7 @@ def main():
 	views.append(GroundView(ground3,b_ground_pic))
 	views.append(GroundView(ground4,b_ground_pic))
 	views.append(GroundView(ground5,b_ground_pic))
+	views.append(GroundView(ground6,a_ground_pic))
 	views.append(ObstacleView(platform3,new_platform_pic))
 	views.append(ObstacleView(platform4,new_platform_pic))
 	views.append(ObstacleView(platform5,new_platform_pic))
@@ -243,8 +247,11 @@ def main():
 		# code for player jumping
 		player.y += player.dy
 		# make player fall
-		if player.dy != 0:
-			player.dy += 0.001 # if you lower this, also lower jumpdy in player class
+		player.dy += 0.001 # if you lower this, also lower jumpdy in player class
+		if player.dy > 0:
+			views[0]=PlayerView(player,new_player_pic)
+		else:
+			views[0]=PlayerView(player,new_playerjump_pic)
 		# make player's jump speed lower with time
 		if player.jumpdy < -.05:
 			player.jumpdy += delta_speed
