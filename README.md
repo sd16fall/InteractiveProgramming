@@ -86,14 +86,26 @@ The class you will find here is
 - Controller
 
 ### Main Function
-Now this function is the thing that pulls the whole game together, and thus, it is probably the most confusing. Here's what it does:
+Now this function is the thing that pulls the whole game together, and thus, it is probably the most confusing. It begins by doing some set up, and then running a while loop that essentially runs the game. Here are the set up steps in order:
 
-- Initializes pygame and the screen
-- defines objects and their views and puts them in appropriate arrays
+- initializes pygame and the screen
+- loads object images
+- defines objects puts them in appropriate arrays
+- resizes images to fit object sizes
+- defines views with objects and images and appends them to the views array
 - defines controller
-- Runs main while loop, which updates object positions, draws the corresponding views, and checks for events. This stops running if the player dies or closes the window.
-- If the player dies, it runs another while loop which displays the losing screen.
 
+And here's what the main while loop does:
+- checks for events such as key presses, and sends them to the controller class
+- checks for trainwreck or player death, which ends the loop
+- moves the train forward
+- handles player jumping
+- handles collisions
+- decreases the speed of player and all things relative to it
+- draws all the views on the screen, and finally
+- updates the display, making this all look like a continuous game!
+
+And one last thing-- if the player dies, it runs another while loop that displays the end screen!
 And that's it!
 
 ## So how do I play?
