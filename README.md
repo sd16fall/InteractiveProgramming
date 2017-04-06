@@ -109,15 +109,19 @@ And one last thing-- if the player dies, it runs another while loop that display
 And that's it!
 
 ## So how do I play?
-Assuming you're working in Linux, it's really as simple as installing Pygame, downloading playfile.py, and calling it in Python using your terminal. This is what this will look like in your command window:
+Assuming you're working in Linux, it's really as simple as installing Pygame, cloning this repository, and calling playfile.py in Python using your terminal. This is what this will look like in your command window:
 
 First,
 ```
-pip install pygame
+$ pip install pygame
 ```
-Next,
+Next, navigate to where you want to clone the repository. Hit clone or download on this page and copy the url. In your command window, type:
 ```
-python playfile.py
+$ git clone *copied url*
+```
+Last, type
+```
+$ python playfile.py
 ```
 And look out, because now you're playing!
 
