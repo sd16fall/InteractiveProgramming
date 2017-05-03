@@ -1,6 +1,8 @@
 # "Pain Train" the Video Game
 ### by Charlie Weiss and Diego Garcia
 
+Also, be sure to check out my [project website](charlievweiss.github.io).
+
 ## What is this?
 This is a video game created using Python's pygame library and an MVP (model-viewer-player) framework. It is a platform game with a player, a chaser, and some obstacles. The player loses by either being overtaken by the chaser, or by falling to their death.
 
